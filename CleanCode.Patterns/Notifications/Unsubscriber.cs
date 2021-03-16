@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace CleanCode.Patterns.Validations
+namespace CleanCode.Patterns.Notifications
 {
     public class Unsubscriber<T> : IDisposable
     {
@@ -20,5 +20,4 @@ namespace CleanCode.Patterns.Validations
                 _observers.Remove(_observer);
         }
     }
-    
 }
