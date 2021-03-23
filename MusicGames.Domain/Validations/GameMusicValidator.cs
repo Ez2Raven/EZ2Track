@@ -20,7 +20,7 @@ namespace MusicGames.Domain.Validations
             RuleFor(x => x.Game).Must(BeAValidGame).WithMessage("Please specify a valid game");
         }
 
-        private bool BeAValidSong(Song song)
+        private bool BeAValidSong(ISong song)
         {
             var validateResults = _songValidator.Validate(song);
             return validateResults.IsValid;

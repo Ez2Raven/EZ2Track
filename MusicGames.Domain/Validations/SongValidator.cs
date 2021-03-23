@@ -3,7 +3,7 @@ using MusicGames.Domain.Models;
 
 namespace MusicGames.Domain.Validations
 {
-    public class SongValidator:AbstractValidator<Song>
+    public class SongValidator:AbstractValidator<ISong>
     {
         public SongValidator()
         {
