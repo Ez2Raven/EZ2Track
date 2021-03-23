@@ -8,6 +8,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MusicGames.Domain.Test", "M
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CleanCode.Patterns", "CleanCode.Patterns\CleanCode.Patterns.csproj", "{1981E40F-03BB-4DFB-9EBB-7827875D3ED5}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MusicGames.SongScraping", "MusicGames.SongScraping\MusicGames.SongScraping.csproj", "{80E0261E-E1BD-44D2-9A54-AEC761D0045D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MusicGames.SongScraping.Test", "MusicGames.SongScraping.Test\MusicGames.SongScraping.Test.csproj", "{EB97D1EB-DABF-4C8C-9D26-DABBC7D90C8A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -30,5 +34,13 @@ Global
 		{1981E40F-03BB-4DFB-9EBB-7827875D3ED5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1981E40F-03BB-4DFB-9EBB-7827875D3ED5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1981E40F-03BB-4DFB-9EBB-7827875D3ED5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{80E0261E-E1BD-44D2-9A54-AEC761D0045D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{80E0261E-E1BD-44D2-9A54-AEC761D0045D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{80E0261E-E1BD-44D2-9A54-AEC761D0045D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{80E0261E-E1BD-44D2-9A54-AEC761D0045D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EB97D1EB-DABF-4C8C-9D26-DABBC7D90C8A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EB97D1EB-DABF-4C8C-9D26-DABBC7D90C8A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EB97D1EB-DABF-4C8C-9D26-DABBC7D90C8A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EB97D1EB-DABF-4C8C-9D26-DABBC7D90C8A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
