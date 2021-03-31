@@ -1,7 +1,5 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StreamerSite.WebAssembly", "StreamerSite.WebAssembly\StreamerSite.WebAssembly.csproj", "{52A8C7F3-3765-4FD3-9E27-3EFC04409B8B}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MusicGames.Domain", "MusicGames.Domain\MusicGames.Domain.csproj", "{F86EA6BB-E5B8-433B-BFBD-63DACD2925B7}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MusicGames.Domain.Test", "MusicGames.Domain.Test\MusicGames.Domain.Test.csproj", "{07DAF2AD-C560-4DBA-8A35-C45BCE1C1F4F}"
@@ -18,10 +16,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{52A8C7F3-3765-4FD3-9E27-3EFC04409B8B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{52A8C7F3-3765-4FD3-9E27-3EFC04409B8B}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{52A8C7F3-3765-4FD3-9E27-3EFC04409B8B}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{52A8C7F3-3765-4FD3-9E27-3EFC04409B8B}.Release|Any CPU.Build.0 = Release|Any CPU
 		{F86EA6BB-E5B8-433B-BFBD-63DACD2925B7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{F86EA6BB-E5B8-433B-BFBD-63DACD2925B7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F86EA6BB-E5B8-433B-BFBD-63DACD2925B7}.Release|Any CPU.ActiveCfg = Release|Any CPU
