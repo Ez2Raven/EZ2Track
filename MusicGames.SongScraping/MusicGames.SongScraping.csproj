@@ -8,5 +8,9 @@
     <ItemGroup>
       <PackageReference Include="HtmlAgilityPack" Version="1.11.31" />        
     </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\MusicGames.Domain\MusicGames.Domain.csproj" />
+    </ItemGroup>
     
 </Project>

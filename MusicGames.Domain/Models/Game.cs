@@ -1,10 +1,10 @@
 ﻿namespace MusicGames.Domain.Models
 {
-    public class BaseGame : IGame
+    public class Game : IGame
     {
         public string Title { get; set; }
-        public bool IsDlc => false;
-
+        public bool IsDlc { get; set; }
+    
         public override string ToString()
         {
             return $"{nameof(Title)}: {Title}, {nameof(IsDlc)}: {IsDlc}";

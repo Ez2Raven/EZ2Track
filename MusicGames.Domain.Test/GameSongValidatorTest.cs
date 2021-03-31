@@ -23,12 +23,7 @@ namespace MusicGames.Domain.Test
                 Random = new Randomizer(1080)
             };
 
-            BaseGame fakeBaseGame = new BaseGame()
-            {
-                Title = lorem.Letter(1)
-            };
-
-            Dlc fakeDlc = new Dlc()
+            Game fakeGame = new Game()
             {
                 Title = lorem.Letter(1)
             };
@@ -39,32 +34,24 @@ namespace MusicGames.Domain.Test
                 Composer = lorem.Letter((1)),
                 Album = lorem.Letter(1)
             };
-
-            GameTrack fakeGameTrack = new GameTrack()
+            var randomFluent = new Bogus.Faker()
             {
-                Song = fakeSong,
-                Game = fakeBaseGame,
-                DifficultyTier = DifficultyTier.Level1
+                Random = new Randomizer(1080)
             };
+            DifficultyMode fakeMode = new DifficultyMode();
+            fakeMode.Level = randomFluent.Random.Int(1, 20);
+            fakeMode.Category = DifficultyCategory.Easy;
 
-            GameTrack fakeDlcTrack = new GameTrack()
-            {
-                Song = fakeSong,
-                Game = fakeDlc,
-                DifficultyTier = DifficultyTier.Level2
-            };
-
+            Ez2OnGameTrack fakeGameTrack = new Ez2OnGameTrack(fakeSong, fakeGame, fakeMode);
 
             SongValidator fakeSongValidator = new SongValidator();
             GameValidator fakeGameValidator = new GameValidator();
 
-            GameMusicValidator mockValidator = new GameMusicValidator(fakeSongValidator, fakeGameValidator);
+            GameTrackValidator mockValidator = new GameTrackValidator(fakeSongValidator, fakeGameValidator);
 
             var gameMusicResults = mockValidator.Validate(fakeGameTrack);
-            var dlcMusicResults = mockValidator.Validate(fakeDlcTrack);
 
             Assert.True(gameMusicResults.IsValid);
-            Assert.True(dlcMusicResults.IsValid);
         }
     }
 }

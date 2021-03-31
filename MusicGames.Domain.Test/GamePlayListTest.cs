@@ -28,31 +28,32 @@ namespace MusicGames.Domain.Test
             };
             
 
-            GamePlayList gamePlayList = new GamePlayList();
+            GameTrackPlaylist gameTrackPlaylist = new GameTrackPlaylist();
             for (int count = 0; count < 10; count++)
             {
-                gamePlayList.Add(new GameTrack()
+                Song fakeSong = new Song()
                 {
-                    Song = new Song()
-                    {
-                        Title = randomPhrase.Phrase(),
-                        Album = randomPhrase.Phrase(),
-                        Composer = fakePerson.FullName
-                    },
-                    DifficultyTier = DifficultyTier.None,
-                    Game = new BaseGame()
-                    {
-                        Title = randomPhrase.Phrase()
-                    }
-                });
+                    Title = randomPhrase.Phrase(),
+                    Album = randomPhrase.Phrase(),
+                    Composer = fakePerson.FullName
+                };
+
+                Game  fakeGame = new Game()
+                {
+                    Title = randomPhrase.Phrase()
+                };
+
+                DifficultyMode fakeMode = new DifficultyMode();
+
+                gameTrackPlaylist.Add(new Ez2OnGameTrack(fakeSong, fakeGame, fakeMode));
             }
 
-            gamePlayList.Name = randomPhrase.Phrase();
-            gamePlayList.DateTimeCreated = randomFluent.Date.Past(10, DateTime.Now);
-            gamePlayList.DateTimeModified = randomFluent.Date.Future(10, DateTime.Now);
+            gameTrackPlaylist.Name = randomPhrase.Phrase();
+            gameTrackPlaylist.DateTimeCreated = randomFluent.Date.Past(10, DateTime.Now);
+            gameTrackPlaylist.DateTimeModified = randomFluent.Date.Future(10, DateTime.Now);
 
             GamePlayListValidator validator = new GamePlayListValidator();
-            ValidationResult results = validator.Validate(gamePlayList);
+            ValidationResult results = validator.Validate(gameTrackPlaylist);
             
             Assert.True(results.IsValid);
         }
@@ -70,35 +71,30 @@ namespace MusicGames.Domain.Test
                 Random = new Randomizer(1080)
             };
 
-            var randomFluent = new Bogus.Faker()
-            {
-                Random = new Randomizer(1080)
-            };
-            
-
-            GamePlayList gamePlayList = new GamePlayList();
+            GameTrackPlaylist gameTrackPlaylist = new GameTrackPlaylist();
             for (int count = 0; count < 10; count++)
             {
-                gamePlayList.Add(new GameTrack()
+                Song fakeSong = new Song()
                 {
-                    Song = new Song()
-                    {
-                        Title = randomPhrase.Phrase(),
-                        Album = randomPhrase.Phrase(),
-                        Composer = fakePerson.FullName
-                    },
-                    DifficultyTier = DifficultyTier.None,
-                    Game = new BaseGame()
-                    {
-                        Title = randomPhrase.Phrase()
-                    }
-                });
+                    Title = randomPhrase.Phrase(),
+                    Album = randomPhrase.Phrase(),
+                    Composer = fakePerson.FullName
+                };
+
+                Game  fakeGame = new Game()
+                {
+                    Title = randomPhrase.Phrase()
+                };
+                
+                DifficultyMode fakeMode = new DifficultyMode();
+
+                gameTrackPlaylist.Add(new Ez2OnGameTrack(fakeSong, fakeGame, fakeMode));
             }
 
-            gamePlayList.Name = randomPhrase.Phrase();
-            gamePlayList.DateTimeModified = DateTime.Now;
+            gameTrackPlaylist.Name = randomPhrase.Phrase();
+            gameTrackPlaylist.DateTimeModified = DateTime.Now;
             GamePlayListValidator validator = new GamePlayListValidator();
-            ValidationResult results = validator.Validate(gamePlayList);
+            ValidationResult results = validator.Validate(gameTrackPlaylist);
 
             Assert.Contains(results.Errors, x => x.ErrorMessage == GamePlayListValidator.DateTimeCreatedErrorMessage);
 
@@ -123,29 +119,30 @@ namespace MusicGames.Domain.Test
             };
             
 
-            GamePlayList gamePlayList = new GamePlayList();
+            GameTrackPlaylist gameTrackPlaylist = new GameTrackPlaylist();
             for (int count = 0; count < 10; count++)
             {
-                gamePlayList.Add(new GameTrack()
+                Song fakeSong = new Song()
                 {
-                    Song = new Song()
-                    {
-                        Title = randomPhrase.Phrase(),
-                        Album = randomPhrase.Phrase(),
-                        Composer = fakePerson.FullName
-                    },
-                    DifficultyTier = DifficultyTier.None,
-                    Game = new BaseGame()
-                    {
-                        Title = randomPhrase.Phrase()
-                    }
-                });
+                    Title = randomPhrase.Phrase(),
+                    Album = randomPhrase.Phrase(),
+                    Composer = fakePerson.FullName
+                };
+
+                Game  fakeGame = new Game()
+                {
+                    Title = randomPhrase.Phrase()
+                };
+                
+                DifficultyMode fakeMode = new DifficultyMode();
+
+                gameTrackPlaylist.Add(new Ez2OnGameTrack(fakeSong, fakeGame, fakeMode));
             }
 
-            gamePlayList.Name = randomPhrase.Phrase();
-            gamePlayList.DateTimeCreated = DateTime.Now;
+            gameTrackPlaylist.Name = randomPhrase.Phrase();
+            gameTrackPlaylist.DateTimeCreated = DateTime.Now;
             GamePlayListValidator validator = new GamePlayListValidator();
-            ValidationResult results = validator.Validate(gamePlayList);
+            ValidationResult results = validator.Validate(gameTrackPlaylist);
 
             Assert.Contains(results.Errors, x => x.ErrorMessage == GamePlayListValidator.DateTimeModifiedErrorMessage);
 
