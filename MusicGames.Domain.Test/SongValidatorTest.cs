@@ -2,7 +2,8 @@
 using Bogus;
 using CleanCode.Patterns.XUnit;
 using FluentValidation.Results;
-using MusicGames.Domain.Models;
+using MusicGames.Domain.AggregatesModels;
+using MusicGames.Domain.AggregatesModels.GameTrackAggregate;
 using MusicGames.Domain.Validations;
 using Xunit;
 using Xunit.Abstractions;
@@ -13,10 +14,14 @@ namespace MusicGames.Domain.Test
     public class SongValidatorTest
     {
         private readonly ITestOutputHelper _output;
-
+        private readonly Faker _randomFluent;
         public SongValidatorTest(ITestOutputHelper output)
         {
             _output = output;
+            _randomFluent = new Bogus.Faker()
+            {
+                Random = new Randomizer(1080)
+            };
         }
         
         [Theory]
@@ -25,17 +30,11 @@ namespace MusicGames.Domain.Test
         [InlineData("ja")]
         public void Assign_MoreThan256Characters_to_SongTitleAlbumComposer_ReturnsError(string locale)
         {
-            //arrange
-            var lorem = new Bogus.DataSets.Lorem(locale: locale)
-            {
-                Random = new Randomizer(1080)
-            };
-
             Song fakeSong = new Song()
             {
-                Title = lorem.Letter(257),
-                Album = lorem.Letter(257),
-                Composer =lorem.Letter(257)
+                Title = _randomFluent.Lorem.Letter(257),
+                Album = _randomFluent.Lorem.Letter(257),
+                Composer =_randomFluent.Lorem.Letter(257)
             };
             
             SongValidator validator = new SongValidator();
