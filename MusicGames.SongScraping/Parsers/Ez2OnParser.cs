@@ -103,10 +103,10 @@ namespace MusicGames.SongScraping.Parsers
             return songSpecificGameTracks;
         }
 
-        public IGame InferGameFromSongAlbum(HtmlNode songNode)
+        public Game InferGameFromSongAlbum(HtmlNode songNode)
         {
             var album = songNode.SelectSingleNode(XPathToAlbum).InnerText.Trim();
-            IGame ez2djGame;
+            Game ez2djGame;
             switch (album.ToUpper())
             {
                 case "1ST TRACKS":

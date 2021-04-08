@@ -4,7 +4,7 @@ using MusicGames.Domain.Models;
 
 namespace MusicGames.Domain.Validations
 {
-    public class GameTrackValidator:AbstractValidator<IGameTrack>
+    public class GameTrackValidator:AbstractValidator<GameTrack>
     {
         private readonly SongValidator _songValidator;
         private readonly GameValidator _gameValidator;
@@ -26,7 +26,7 @@ namespace MusicGames.Domain.Validations
             return validateResults.IsValid;
         }
 
-        private bool BeAValidGame(IGame game)
+        private bool BeAValidGame(Game game)
         {
             var validateResults = _gameValidator.Validate(game);
             return validateResults.IsValid;

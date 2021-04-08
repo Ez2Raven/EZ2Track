@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace MusicGames.Domain.Models
 {
-    public class GameTrackPlaylist:List<IGameTrack>
+    public class GameTrackPlaylist:List<GameTrack>
     {
         public string Name { get; set; }
         public DateTime DateTimeCreated { get; set; }
