@@ -1,14 +1,14 @@
 ﻿using System;
 using FluentValidation;
-using MusicGames.Domain.Models;
 
-namespace MusicGames.Domain.Validations
+namespace MusicGames.Domain.AggregatesModels.GameTrackAggregate
 {
-    public class GamePlayListValidator:AbstractValidator<GameTrackPlaylist>
+    public class GameTrackPlaylistValidator : AbstractValidator<Playlist<GameTrack>>
     {
         public const string DateTimeCreatedErrorMessage = "Please provide a non-default DateTimeCreated";
         public const string DateTimeModifiedErrorMessage = "Please provide a non-default DateTimeModified";
-        public GamePlayListValidator()
+
+        public GameTrackPlaylistValidator()
         {
             RuleFor(x => x.Name).NotEmpty();
             RuleFor(x => x.Name).Length(1, 250);
@@ -16,6 +16,7 @@ namespace MusicGames.Domain.Validations
                 .WithMessage(DateTimeCreatedErrorMessage);
             RuleFor(x => x.DateTimeModified).NotEqual(default(DateTime))
                 .WithMessage(DateTimeModifiedErrorMessage);
+            RuleFor(x => x.Songs).NotNull();
         }
     }
 }

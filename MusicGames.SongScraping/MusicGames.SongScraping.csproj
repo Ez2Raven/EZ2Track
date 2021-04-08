@@ -6,13 +6,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="HtmlAgilityPack" Version="1.11.31" />
-      <PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.0.5" />
-      <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="5.0.5">
-        <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-        <PrivateAssets>all</PrivateAssets>
-      </PackageReference>
-      <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="5.0.5" />        
+      <PackageReference Include="HtmlAgilityPack" Version="1.11.31" />        
     </ItemGroup>
 
     <ItemGroup>

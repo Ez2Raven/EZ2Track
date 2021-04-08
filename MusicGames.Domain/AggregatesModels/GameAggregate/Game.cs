@@ -1,12 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using MusicGames.Domain.SeedWork;
 
-namespace MusicGames.Domain.Models
+namespace MusicGames.Domain.AggregatesModels.GameAggregate
 {
-    public class Game
+    public class Game : Entity
     {
         public string Title { get; set; }
         public bool IsDlc { get; set; }
-        public List<GameTrack> GameTracks { get; } = new();
 
         public override string ToString()
         {

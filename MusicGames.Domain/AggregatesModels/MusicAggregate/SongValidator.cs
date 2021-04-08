@@ -1,9 +1,8 @@
 ﻿using FluentValidation;
-using MusicGames.Domain.Models;
 
-namespace MusicGames.Domain.Validations
+namespace MusicGames.Domain.AggregatesModels.MusicAggregate
 {
-    public class SongValidator:AbstractValidator<ISong>
+    public class SongValidator : AbstractValidator<Song>
     {
         public SongValidator()
         {
@@ -13,7 +12,6 @@ namespace MusicGames.Domain.Validations
             RuleFor(x => x.Composer).Length(1, 250);
             RuleFor(x => x.Album).NotEmpty();
             RuleFor(x => x.Album).Length(1, 250);
-            
         }
     }
 }

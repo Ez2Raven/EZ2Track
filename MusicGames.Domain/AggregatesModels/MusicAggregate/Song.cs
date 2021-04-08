@@ -1,19 +1,11 @@
-﻿namespace MusicGames.Domain.Models
-{
-    public interface ISong
-    {
-        string Title { get; set; }
-        string Composer { get; set; }
-        string Album { get; set; }
-        string Genre { get; set; }
-        string Bpm { get; set; }
-    }
+﻿using MusicGames.Domain.SeedWork;
 
-    public class Song : ISong
+namespace MusicGames.Domain.AggregatesModels.MusicAggregate
+{
+    public class Song : Entity
     {
         public Song()
         {
-            
         }
 
         protected Song(Song songDetails)
@@ -24,7 +16,7 @@
             Genre = songDetails.Genre;
             Bpm = songDetails.Bpm;
         }
-        
+
         public string Title { get; set; }
         public string Composer { get; set; }
         public string Album { get; set; }
@@ -34,7 +26,8 @@
 
         public override string ToString()
         {
-            return $"{nameof(Title)}: {Title}, {nameof(Composer)}: {Composer}, {nameof(Album)}: {Album}, {nameof(Genre)}: {Genre}, {nameof(Bpm)}: {Bpm}";
+            return
+                $"{nameof(Title)}: {Title}, {nameof(Composer)}: {Composer}, {nameof(Album)}: {Album}, {nameof(Genre)}: {Genre}, {nameof(Bpm)}: {Bpm}";
         }
     }
 }

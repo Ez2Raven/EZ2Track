@@ -1,4 +1,4 @@
-﻿namespace MusicGames.Domain.Models
+﻿namespace MusicGames.Domain.AggregatesModels.GameTrackAggregate
 {
     public enum DifficultyCategory
     {
