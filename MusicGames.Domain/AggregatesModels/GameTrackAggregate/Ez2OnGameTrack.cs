@@ -2,9 +2,13 @@
 
 namespace MusicGames.Domain.AggregatesModels.GameTrackAggregate
 {
-    public class Ez2OnGameTrack : GameTrack
+    public sealed class Ez2OnGameTrack : GameTrack
     {
-        public Ez2OnGameTrack(Song songDetails, int gameId, DifficultyMode difficultyMode) : base(songDetails, gameId,
+        public Ez2OnGameTrack()
+        {
+            
+        }
+        public Ez2OnGameTrack(Song song, int gameId, DifficultyMode difficultyMode) : base(song, gameId,
             difficultyMode)
         {
         }

@@ -432,3 +432,6 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+
+#SQLite DBs during development
+SongScraping.Infrastructure/streamer-site.db
