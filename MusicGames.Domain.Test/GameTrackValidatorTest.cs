@@ -26,8 +26,10 @@ namespace MusicGames.Domain.Test
         [InlineData("ko")]
         public void GameTrack_MustBeValid_WithAbstractedGameId(string locale)
         {
+            _randomFluent.Lorem.Locale = locale;
+            
             var fakeGameId = _randomFluent.Random.Int(0, 100);
-
+            
             var fakeSong = new Song
             {
                 Title = _randomFluent.Lorem.Letter(),

@@ -26,6 +26,7 @@ namespace MusicGames.Domain.Test
         [InlineData("ja")]
         public void Assign_MoreThan256Characters_to_SongTitleAlbumComposer_ReturnsError(string locale)
         {
+            _randomFluent.Lorem.Locale = locale;
             var fakeSong = new Song
             {
                 Title = _randomFluent.Lorem.Letter(257),
