@@ -64,7 +64,7 @@ namespace MusicGames.SongScraping.Test
             string album, string genre)
         {
             var doc = new HtmlDocument();
-            doc.Load("ez2onDBSample.html");
+            doc.Load("ez2onDBSample.html.txt");
             var songNode = doc.DocumentNode.SelectSingleNode(xPath);
             var mockLogger = new Mock<ILogger<Ez2OnParser>>();
             var parser = new Ez2OnParser(mockLogger.Object);
@@ -92,7 +92,7 @@ namespace MusicGames.SongScraping.Test
             string album, string genre)
         {
             var doc = new HtmlDocument();
-            doc.Load("ez2onDBSample.html");
+            doc.Load("ez2onDBSample.html.txt");
             var songNode = doc.DocumentNode.SelectSingleNode(xPath);
             var mockLogger = new Mock<ILogger<Ez2OnParser>>();
             var parser = new Ez2OnParser(mockLogger.Object);
@@ -138,7 +138,7 @@ namespace MusicGames.SongScraping.Test
         public void Can_ParseSongNode_As_ValidGame(string xPathToEz2DjSongNode, string gameTitle)
         {
             var doc = new HtmlDocument();
-            doc.Load("ez2onDBSample.html");
+            doc.Load("ez2onDBSample.html.txt");
             var songNode = doc.DocumentNode.SelectSingleNode(xPathToEz2DjSongNode);
             var mockLogger = new Mock<ILogger<Ez2OnParser>>();
             var parser = new Ez2OnParser(mockLogger.Object);
@@ -174,7 +174,7 @@ namespace MusicGames.SongScraping.Test
             DifficultyCategory difficultyCategory)
         {
             var doc = new HtmlDocument();
-            doc.Load("ez2onDBSample.html");
+            doc.Load("ez2onDBSample.html.txt");
             var songNode = doc.DocumentNode.SelectSingleNode(xPathToSong);
             var mockLogger = new Mock<ILogger<Ez2OnParser>>();
             var parser = new Ez2OnParser(mockLogger.Object);
