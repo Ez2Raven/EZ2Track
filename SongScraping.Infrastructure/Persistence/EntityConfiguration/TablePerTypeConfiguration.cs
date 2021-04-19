@@ -12,18 +12,6 @@ namespace SongScraping.Infrastructure.Persistence.EntityConfiguration
     {
         public virtual void Configure(EntityTypeBuilder<T> builder)
         {
-            builder
-                .HasKey(entity => entity.Id);
-
-            builder
-                .HasIndex(e => e.ExternalId)
-                .IsUnique()
-                .HasDatabaseName($"Index_{typeof(T).Name}_WebApiLookupRef");
-            
-            builder
-                .Property(e => e.RowVersion)
-                .IsRowVersion();
-            
             builder.ToTable(typeof(T).Name);
         }
     }

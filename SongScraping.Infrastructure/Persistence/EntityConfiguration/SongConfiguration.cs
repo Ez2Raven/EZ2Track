@@ -4,7 +4,7 @@ using MusicGames.Domain.AggregatesModels.MusicAggregate;
 
 namespace SongScraping.Infrastructure.Persistence.EntityConfiguration
 {
-    public sealed class SongConfiguration : TablePerTypeConfiguration<Song>
+    public sealed class SongConfiguration : SeedWorkTptConfiguration<Song>
     {
         public override void Configure(EntityTypeBuilder<Song> builder)
         {

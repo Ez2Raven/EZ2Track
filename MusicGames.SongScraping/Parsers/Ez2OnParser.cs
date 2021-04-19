@@ -43,9 +43,9 @@ namespace MusicGames.SongScraping.Parsers
             var songSpecificGameTracks = new List<Ez2OnGameTrack>();
             var game = InferGameFromSongAlbum(songNode);
 
-            if (game.Id != null)
+            if (game.Id != 0)
             {
-                var ez2djGameId = game.Id.Value;
+                var ez2djGameId = game.Id;
 
                 var song = ParseSongFromHtmlNode(songNode);
 

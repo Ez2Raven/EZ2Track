@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace SongScraping.Infrastructure.Migrations
+namespace MusicGames.Seeding.Migrations
 {
     public partial class Initial : Migration
     {
@@ -16,7 +16,7 @@ namespace SongScraping.Infrastructure.Migrations
                     Title = table.Column<string>(type: "TEXT", maxLength: 250, nullable: false),
                     IsDlc = table.Column<bool>(type: "INTEGER", nullable: false),
                     ExternalId = table.Column<Guid>(type: "TEXT", nullable: false),
-                    RowVersion = table.Column<byte[]>(type: "BLOB", rowVersion: true, nullable: true)
+                    RowVersion = table.Column<int>(type: "INTEGER", rowVersion: true, nullable: false, defaultValue: 0)
                 },
                 constraints: table =>
                 {
@@ -35,7 +35,7 @@ namespace SongScraping.Infrastructure.Migrations
                     Genre = table.Column<string>(type: "TEXT", maxLength: 250, nullable: true),
                     Bpm = table.Column<string>(type: "TEXT", maxLength: 20, nullable: true),
                     ExternalId = table.Column<Guid>(type: "TEXT", nullable: false),
-                    RowVersion = table.Column<byte[]>(type: "BLOB", rowVersion: true, nullable: true)
+                    RowVersion = table.Column<int>(type: "INTEGER", rowVersion: true, nullable: false, defaultValue: 0)
                 },
                 constraints: table =>
                 {
@@ -43,47 +43,59 @@ namespace SongScraping.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Ez2OnGameTrack",
+                name: "GameTracks",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false),
-                    Ez2OnDbSequenceNumber = table.Column<int>(type: "INTEGER", nullable: false),
-                    ExternalId = table.Column<Guid>(type: "TEXT", nullable: false),
-                    RowVersion = table.Column<byte[]>(type: "BLOB", rowVersion: true, nullable: true),
                     GameId = table.Column<int>(type: "INTEGER", nullable: false),
-                    SongId = table.Column<int>(type: "INTEGER", nullable: true),
                     DifficultyMode_Category = table.Column<int>(type: "INTEGER", maxLength: 50, nullable: true),
                     DifficultyMode_Level = table.Column<int>(type: "INTEGER", maxLength: 5, nullable: true),
                     ThumbnailUrl = table.Column<string>(type: "TEXT", maxLength: 250, nullable: true),
-                    VisualizedBy = table.Column<string>(type: "TEXT", maxLength: 250, nullable: true)
+                    VisualizedBy = table.Column<string>(type: "TEXT", maxLength: 250, nullable: true),
+                    SongId = table.Column<int>(type: "INTEGER", nullable: false),
+                    ExternalId = table.Column<Guid>(type: "TEXT", nullable: false),
+                    RowVersion = table.Column<int>(type: "INTEGER", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_GameTracks", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_GameTracks_Song_SongId",
+                        column: x => x.SongId,
+                        principalTable: "Song",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Ez2OnGameTrack",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    Ez2OnDbSequenceNumber = table.Column<int>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Ez2OnGameTrack", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Ez2OnGameTrack_Song_SongId",
-                        column: x => x.SongId,
-                        principalTable: "Song",
+                        name: "FK_Ez2OnGameTrack_GameTracks_Id",
+                        column: x => x.Id,
+                        principalTable: "GameTracks",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
-
-            migrationBuilder.CreateIndex(
-                name: "Index_Ez2OnGameTrack_WebApiLookupRef",
-                table: "Ez2OnGameTrack",
-                column: "ExternalId",
-                unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Ez2OnGameTrack_SongId",
-                table: "Ez2OnGameTrack",
-                column: "SongId");
 
             migrationBuilder.CreateIndex(
                 name: "Index_Game_WebApiLookupRef",
                 table: "Game",
                 column: "ExternalId",
                 unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_GameTracks_SongId",
+                table: "GameTracks",
+                column: "SongId");
 
             migrationBuilder.CreateIndex(
                 name: "Index_Song_WebApiLookupRef",
@@ -99,6 +111,9 @@ namespace SongScraping.Infrastructure.Migrations
 
             migrationBuilder.DropTable(
                 name: "Game");
+
+            migrationBuilder.DropTable(
+                name: "GameTracks");
 
             migrationBuilder.DropTable(
                 name: "Song");

@@ -6,22 +6,16 @@ namespace MusicGames.Domain.SeedWork
 {
     public class Entity
     {
-        private int? _id = null;
-
-        public int? Id
-        {
-            get => _id;
-            set => _id = value;
-        }
+        public int Id { get; set; }
 
         public Guid ExternalId { get; set; }
 
         /// <summary>
         /// Tracking column to implement database optimistic concurrency control.
         /// </summary>
-        public byte[] RowVersion { get; set; }
+        public int RowVersion { get; set; }
 
-        private sealed class ExternalIdEqualityComparer : IEqualityComparer<Entity>
+        private sealed class IdExternalIdRowVersionEqualityComparer : IEqualityComparer<Entity>
         {
             public bool Equals(Entity x, Entity y)
             {
@@ -29,18 +23,15 @@ namespace MusicGames.Domain.SeedWork
                 if (ReferenceEquals(x, null)) return false;
                 if (ReferenceEquals(y, null)) return false;
                 if (x.GetType() != y.GetType()) return false;
-                return x.ExternalId.Equals(y.ExternalId);
+                return x.Id == y.Id && x.ExternalId.Equals(y.ExternalId) && x.RowVersion == y.RowVersion;
             }
 
             public int GetHashCode(Entity obj)
             {
-                return obj.ExternalId.GetHashCode();
+                return HashCode.Combine(obj.Id, obj.ExternalId, obj.RowVersion);
             }
         }
 
-        /// <summary>
-        /// Default Equality Comparer: Compare Equality via Guid.
-        /// </summary>
-        public static IEqualityComparer<Entity> ExternalIdComparer { get; } = new ExternalIdEqualityComparer();
+        public static IEqualityComparer<Entity> IdExternalIdRowVersionComparer { get; } = new IdExternalIdRowVersionEqualityComparer();
     }
 }

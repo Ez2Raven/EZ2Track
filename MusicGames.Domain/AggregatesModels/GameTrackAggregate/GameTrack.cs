@@ -20,9 +20,11 @@ namespace MusicGames.Domain.AggregatesModels.GameTrackAggregate
         public int GameId { get; set; }
         
         public Song Song { get; set; }
+        
         public DifficultyMode DifficultyMode { get; set; }
         public string ThumbnailUrl { get; set; }
         public string VisualizedBy { get; set; }
+        public int SongId { get; set; }
 
         public override string ToString()
         {

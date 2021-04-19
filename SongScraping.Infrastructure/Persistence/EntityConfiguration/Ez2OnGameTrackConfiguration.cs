@@ -9,31 +9,9 @@ namespace SongScraping.Infrastructure.Persistence.EntityConfiguration
         public override void Configure(EntityTypeBuilder<Ez2OnGameTrack> builder)
         {
             builder
-                .Property(gameTrack => gameTrack.GameId)
+                .Property(track => track.Ez2OnDbSequenceNumber)
                 .IsRequired();
-
-            builder
-                .OwnsOne(gt => gt.DifficultyMode,
-                    dm =>
-                    {
-                        dm.Property(dm => dm.Category)
-                            .HasMaxLength(50)
-                            .IsRequired();
-
-                        dm.Property(dm => dm.Level)
-                            .HasMaxLength(5)
-                            .IsRequired();
-                    });
-
-            builder
-                .Property(gameTrack => gameTrack.ThumbnailUrl)
-                .HasMaxLength(250);
-
-            builder
-                .Property(gameTrack => gameTrack.VisualizedBy)
-                .HasMaxLength(250);
-
-            base.Configure(builder);
+            base.Configure(builder);     
         }
     }
 }

@@ -6,7 +6,6 @@ namespace MusicGames.Domain.AggregatesModels.GameTrackAggregate
     {
         public Ez2OnGameTrack()
         {
-            
         }
         public Ez2OnGameTrack(Song song, int gameId, DifficultyMode difficultyMode) : base(song, gameId,
             difficultyMode)

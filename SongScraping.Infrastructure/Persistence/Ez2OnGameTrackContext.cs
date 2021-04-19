@@ -8,19 +8,22 @@ namespace SongScraping.Infrastructure.Persistence
 {
     public class Ez2OnGameTrackContext : DbContext
     {
-        public DbSet<Game> Games { get; set; }
-        public DbSet<Song> Songs { get; set; }
-        public DbSet<Ez2OnGameTrack> Ez2OnGameTracks { get; set; }
-
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        public Ez2OnGameTrackContext(DbContextOptions<Ez2OnGameTrackContext> options)
+        : base(options)
         {
-            optionsBuilder.UseSqlite(@"Data Source=streamer-site.db");
+            
         }
+        
+        public DbSet<Song> Songs { get; set; }
+        
+        public DbSet<GameTrack> GameTracks { get; set; }
+        
+        public DbSet<Ez2OnGameTrack> Ez2OnGameTracks { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            new GameConfiguration().Configure(modelBuilder.Entity<Game>());
             new SongConfiguration().Configure(modelBuilder.Entity<Song>());
+            new GameTrackConfiguration().Configure(modelBuilder.Entity<GameTrack>());
             new Ez2OnGameTrackConfiguration().Configure(modelBuilder.Entity<Ez2OnGameTrack>());
         }
     }

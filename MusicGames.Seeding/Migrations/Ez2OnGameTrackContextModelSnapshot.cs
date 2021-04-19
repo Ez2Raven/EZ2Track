@@ -2,17 +2,15 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SongScraping.Infrastructure.Persistence;
 
-namespace SongScraping.Infrastructure.Migrations
+namespace MusicGames.Seeding.Migrations
 {
     [DbContext(typeof(Ez2OnGameTrackContext))]
-    [Migration("20210412142234_Initial")]
-    partial class Initial
+    partial class Ez2OnGameTrackContextModelSnapshot : ModelSnapshot
     {
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -20,7 +18,7 @@ namespace SongScraping.Infrastructure.Migrations
 
             modelBuilder.Entity("MusicGames.Domain.AggregatesModels.GameAggregate.Game", b =>
                 {
-                    b.Property<int?>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
@@ -30,10 +28,11 @@ namespace SongScraping.Infrastructure.Migrations
                     b.Property<bool>("IsDlc")
                         .HasColumnType("INTEGER");
 
-                    b.Property<byte[]>("RowVersion")
+                    b.Property<int>("RowVersion")
                         .IsConcurrencyToken()
                         .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("BLOB");
+                        .HasColumnType("INTEGER")
+                        .HasDefaultValue(0);
 
                     b.Property<string>("Title")
                         .IsRequired()
@@ -49,27 +48,22 @@ namespace SongScraping.Infrastructure.Migrations
                     b.ToTable("Game");
                 });
 
-            modelBuilder.Entity("MusicGames.Domain.AggregatesModels.GameTrackAggregate.Ez2OnGameTrack", b =>
+            modelBuilder.Entity("MusicGames.Domain.AggregatesModels.GameTrackAggregate.GameTrack", b =>
                 {
-                    b.Property<int?>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
                     b.Property<Guid>("ExternalId")
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("Ez2OnDbSequenceNumber")
-                        .HasColumnType("INTEGER");
-
                     b.Property<int>("GameId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<byte[]>("RowVersion")
-                        .IsConcurrencyToken()
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("BLOB");
+                    b.Property<int>("RowVersion")
+                        .HasColumnType("INTEGER");
 
-                    b.Property<int?>("SongId")
+                    b.Property<int>("SongId")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("ThumbnailUrl")
@@ -82,18 +76,14 @@ namespace SongScraping.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ExternalId")
-                        .IsUnique()
-                        .HasDatabaseName("Index_Ez2OnGameTrack_WebApiLookupRef");
-
                     b.HasIndex("SongId");
 
-                    b.ToTable("Ez2OnGameTrack");
+                    b.ToTable("GameTracks");
                 });
 
             modelBuilder.Entity("MusicGames.Domain.AggregatesModels.MusicAggregate.Song", b =>
                 {
-                    b.Property<int?>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
@@ -116,10 +106,11 @@ namespace SongScraping.Infrastructure.Migrations
                         .HasMaxLength(250)
                         .HasColumnType("TEXT");
 
-                    b.Property<byte[]>("RowVersion")
+                    b.Property<int>("RowVersion")
                         .IsConcurrencyToken()
                         .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("BLOB");
+                        .HasColumnType("INTEGER")
+                        .HasDefaultValue(0);
 
                     b.Property<string>("Title")
                         .IsRequired()
@@ -137,13 +128,25 @@ namespace SongScraping.Infrastructure.Migrations
 
             modelBuilder.Entity("MusicGames.Domain.AggregatesModels.GameTrackAggregate.Ez2OnGameTrack", b =>
                 {
+                    b.HasBaseType("MusicGames.Domain.AggregatesModels.GameTrackAggregate.GameTrack");
+
+                    b.Property<int>("Ez2OnDbSequenceNumber")
+                        .HasColumnType("INTEGER");
+
+                    b.ToTable("Ez2OnGameTrack");
+                });
+
+            modelBuilder.Entity("MusicGames.Domain.AggregatesModels.GameTrackAggregate.GameTrack", b =>
+                {
                     b.HasOne("MusicGames.Domain.AggregatesModels.MusicAggregate.Song", "Song")
                         .WithMany()
-                        .HasForeignKey("SongId");
+                        .HasForeignKey("SongId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.OwnsOne("MusicGames.Domain.AggregatesModels.GameTrackAggregate.DifficultyMode", "DifficultyMode", b1 =>
                         {
-                            b1.Property<int>("Ez2OnGameTrackId")
+                            b1.Property<int>("GameTrackId")
                                 .HasColumnType("INTEGER");
 
                             b1.Property<int>("Category")
@@ -154,17 +157,26 @@ namespace SongScraping.Infrastructure.Migrations
                                 .HasMaxLength(5)
                                 .HasColumnType("INTEGER");
 
-                            b1.HasKey("Ez2OnGameTrackId");
+                            b1.HasKey("GameTrackId");
 
-                            b1.ToTable("Ez2OnGameTrack");
+                            b1.ToTable("GameTracks");
 
                             b1.WithOwner()
-                                .HasForeignKey("Ez2OnGameTrackId");
+                                .HasForeignKey("GameTrackId");
                         });
 
                     b.Navigation("DifficultyMode");
 
                     b.Navigation("Song");
+                });
+
+            modelBuilder.Entity("MusicGames.Domain.AggregatesModels.GameTrackAggregate.Ez2OnGameTrack", b =>
+                {
+                    b.HasOne("MusicGames.Domain.AggregatesModels.GameTrackAggregate.GameTrack", null)
+                        .WithOne()
+                        .HasForeignKey("MusicGames.Domain.AggregatesModels.GameTrackAggregate.Ez2OnGameTrack", "Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

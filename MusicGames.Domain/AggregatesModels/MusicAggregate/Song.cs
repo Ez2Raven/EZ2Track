@@ -23,7 +23,7 @@ namespace MusicGames.Domain.AggregatesModels.MusicAggregate
 
         public string Genre { get; set; }
         public string Bpm { get; set; }
-
+        
         public override string ToString()
         {
             return

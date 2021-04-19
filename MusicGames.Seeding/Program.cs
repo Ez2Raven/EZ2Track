@@ -1,8 +1,11 @@
 ﻿using System;
-using System.Linq;
-using MusicGames.Domain.AggregatesModels.GameAggregate;
-using MusicGames.Domain.AggregatesModels.GameTrackAggregate;
-using MusicGames.Domain.AggregatesModels.MusicAggregate;
+using System.IO;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using Serilog;
+using Serilog.Events;
 using SongScraping.Infrastructure.Persistence;
 
 namespace MusicGames.Seeding
@@ -11,50 +14,63 @@ namespace MusicGames.Seeding
     {
         static void Main(string[] args)
         {
-            using (var context = new Ez2OnGameTrackContext())
+            var configuration = new ConfigurationBuilder()
+                .SetBasePath(Directory.GetCurrentDirectory())
+                .AddJsonFile(path: "appsettings.json", optional: false, reloadOnChange: true)
+                .Build();
+
+            Log.Logger = new LoggerConfiguration()
+                .ReadFrom.Configuration(configuration)
+                .CreateLogger();
+            try
             {
-                context.Database.EnsureCreated();
+                Log.Information("Args: {Args}", args);
 
-                var firstGame = context.Games.FirstOrDefault(b => b.Title == "First Game");
-                if (firstGame == null)
+                var host = CreateHostBuilder(args).Build();
+                using (var serviceScope = host.Services.CreateScope())
                 {
-                    context.Games.Add(new Game
-                    {
-                        Title = "First Game",
-                        IsDlc = false,
-                        ExternalId = Guid.NewGuid()
-                    });
+                    var services = serviceScope.ServiceProvider;
+                    var seeder = services.GetRequiredService<ISeeding>();
+                    seeder.Seed();
                 }
 
-                var firstSong = context.Songs.FirstOrDefault(s => s.Title == "First Song");
-                if (firstSong == null)
-                {
-                    context.Songs.Add(new Song()
-                    {
-                        Title = "First Song",
-                        Album = "First Album",
-                        Bpm = "90 ~ 120",
-                        Composer = "First Composer",
-                        Genre = "First Genre",
-                        ExternalId = Guid.NewGuid()
-                    });
-                }
-
-                var firstGameTrack = context.Ez2OnGameTracks.FirstOrDefault(gt => gt.Id == 1);
-                if (firstGameTrack == null)
-                {
-                    context.Ez2OnGameTracks.Add(
-                        new Ez2OnGameTrack(
-                            firstSong,
-                            1,
-                            new DifficultyMode() {Category = DifficultyCategory.SuperHard, Level = 20})
-                    {
-                        Ez2OnDbSequenceNumber = 1,
-                        ExternalId = Guid.NewGuid()
-                    });
-                }
-                context.SaveChanges();
+                host.Run();
             }
+            catch (Exception ex)
+            {
+                Log.Error(ex, "an error has occured");
+            }
+            finally
+            {
+                Log.CloseAndFlush();
+            }
+            
+        }
+        private static IHostBuilder CreateHostBuilder(string[] args)
+        {
+            return Host.CreateDefaultBuilder(args)
+                    .ConfigureHostConfiguration(configHost =>
+                    {
+                        configHost.SetBasePath(Directory.GetCurrentDirectory());
+                        configHost.AddEnvironmentVariables(prefix: "SONGSCRAPE_");
+                        configHost.AddCommandLine(args);
+                    })
+                    .ConfigureServices(serviceCollection =>
+                    {
+                        serviceCollection.AddScoped<ISeeding, TestSeeder>();
+                        serviceCollection.AddDbContext<GameContext>(
+                            options => options
+                                .UseSqlite(@"Data Source=streamer-site.db",
+                                    b=>b.MigrationsAssembly("MusicGames.Seeding"))
+                        );
+                        serviceCollection.AddDbContext<Ez2OnGameTrackContext>(
+                            options => options
+                                .UseSqlite(@"Data Source=streamer-site.db",
+                                    b=>b.MigrationsAssembly("MusicGames.Seeding"))
+                            );
+                    })
+                    .UseSerilog()
+                ;
         }
     }
 }
