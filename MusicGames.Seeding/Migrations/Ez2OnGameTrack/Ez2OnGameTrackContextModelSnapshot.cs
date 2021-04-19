@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SongScraping.Infrastructure.Persistence;
 
-namespace MusicGames.Seeding.Migrations
+namespace MusicGames.Seeding.Migrations.Ez2OnGameTrack
 {
     [DbContext(typeof(Ez2OnGameTrackContext))]
     partial class Ez2OnGameTrackContextModelSnapshot : ModelSnapshot
@@ -15,38 +15,6 @@ namespace MusicGames.Seeding.Migrations
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("ProductVersion", "5.0.5");
-
-            modelBuilder.Entity("MusicGames.Domain.AggregatesModels.GameAggregate.Game", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<Guid>("ExternalId")
-                        .HasColumnType("TEXT");
-
-                    b.Property<bool>("IsDlc")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("RowVersion")
-                        .IsConcurrencyToken()
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("INTEGER")
-                        .HasDefaultValue(0);
-
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasMaxLength(250)
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ExternalId")
-                        .IsUnique()
-                        .HasDatabaseName("Index_Game_WebApiLookupRef");
-
-                    b.ToTable("Game");
-                });
 
             modelBuilder.Entity("MusicGames.Domain.AggregatesModels.GameTrackAggregate.GameTrack", b =>
                 {

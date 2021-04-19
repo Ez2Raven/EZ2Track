@@ -1,28 +1,12 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace MusicGames.Seeding.Migrations
+namespace MusicGames.Seeding.Migrations.Ez2OnGameTrack
 {
-    public partial class Initial : Migration
+    public partial class GameTrackContextInitial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.CreateTable(
-                name: "Game",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    Title = table.Column<string>(type: "TEXT", maxLength: 250, nullable: false),
-                    IsDlc = table.Column<bool>(type: "INTEGER", nullable: false),
-                    ExternalId = table.Column<Guid>(type: "TEXT", nullable: false),
-                    RowVersion = table.Column<int>(type: "INTEGER", rowVersion: true, nullable: false, defaultValue: 0)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Game", x => x.Id);
-                });
-
             migrationBuilder.CreateTable(
                 name: "Song",
                 columns: table => new
@@ -87,12 +71,6 @@ namespace MusicGames.Seeding.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "Index_Game_WebApiLookupRef",
-                table: "Game",
-                column: "ExternalId",
-                unique: true);
-
-            migrationBuilder.CreateIndex(
                 name: "IX_GameTracks_SongId",
                 table: "GameTracks",
                 column: "SongId");
@@ -108,9 +86,6 @@ namespace MusicGames.Seeding.Migrations
         {
             migrationBuilder.DropTable(
                 name: "Ez2OnGameTrack");
-
-            migrationBuilder.DropTable(
-                name: "Game");
 
             migrationBuilder.DropTable(
                 name: "GameTracks");
