@@ -1,11 +1,7 @@
-﻿namespace MusicGames.Domain.Models
+﻿namespace MusicGames.Domain.AggregatesModels.GameTrackAggregate
 {
     public class DifficultyMode
     {
-        public DifficultyMode()
-        {
-        }
-
         public DifficultyCategory Category { get; set; } = DifficultyCategory.None;
         public int Level { get; set; }
 

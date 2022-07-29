@@ -1,13 +1,9 @@
-﻿using System;
-using HtmlAgilityPack;
-
-namespace MusicGames.SongScraping
+﻿namespace MusicGames.SongScraping
 {
-    class Program
+    internal class Program
     {
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
-           
         }
     }
 }

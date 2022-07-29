@@ -1,9 +1,8 @@
 ﻿using FluentValidation;
-using MusicGames.Domain.Models;
 
-namespace MusicGames.Domain.Validations
+namespace MusicGames.Domain.AggregatesModels.GameAggregate
 {
-    public class GameValidator:AbstractValidator<IGame>
+    public class GameValidator : AbstractValidator<Game>
     {
         public GameValidator()
         {
