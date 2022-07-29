@@ -8,11 +8,11 @@ using MusicGames.Domain.AggregatesModels.MusicAggregate;
 
 namespace MusicGames.SongScraping.Parsers
 {
-    public class Ez2OnParser
+    public class Ez2DbParser
     {
-        private readonly ILogger<Ez2OnParser> _logger;
+        private readonly ILogger<Ez2DbParser> _logger;
 
-        public Ez2OnParser(ILogger<Ez2OnParser> logger)
+        public Ez2DbParser(ILogger<Ez2DbParser> logger)
         {
             _logger = logger;
         }

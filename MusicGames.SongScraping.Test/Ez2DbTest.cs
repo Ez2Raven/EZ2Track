@@ -10,11 +10,11 @@ using Xunit.Abstractions;
 
 namespace MusicGames.SongScraping.Test
 {
-    public class HapApplicationTest
+    public class Ez2DbTest
     {
         private readonly ITestOutputHelper _output;
 
-        public HapApplicationTest(ITestOutputHelper output)
+        public Ez2DbTest(ITestOutputHelper output)
         {
             _output = output;
         }
@@ -47,8 +47,8 @@ namespace MusicGames.SongScraping.Test
             var xpath = "/html/body/div[@id='contentmain']/table[@id='EZ2ONContent']/tbody[@id='EZ2DJ_TRACKS']/tr";
             var songNodes = htmlDoc.DocumentNode.SelectNodes(xpath);
 
-            var mockLogger = new Mock<ILogger<Ez2OnParser>>();
-            var parser = new Ez2OnParser(mockLogger.Object);
+            var mockLogger = new Mock<ILogger<Ez2DbParser>>();
+            var parser = new Ez2DbParser(mockLogger.Object);
 
             var ez2OnGameTracks = parser.AggregateGameTracksForAllSongs(songNodes);
             Assert.Equal(numOfGameTracks, ez2OnGameTracks.Count);
@@ -66,8 +66,8 @@ namespace MusicGames.SongScraping.Test
             var doc = new HtmlDocument();
             doc.Load("ez2onDBSample.html.txt");
             var songNode = doc.DocumentNode.SelectSingleNode(xPath);
-            var mockLogger = new Mock<ILogger<Ez2OnParser>>();
-            var parser = new Ez2OnParser(mockLogger.Object);
+            var mockLogger = new Mock<ILogger<Ez2DbParser>>();
+            var parser = new Ez2DbParser(mockLogger.Object);
             var actualSong = parser.ParseSongFromHtmlNode(songNode);
             Assert.Equal(songTitle, actualSong.Title);
             Assert.Equal(composer, actualSong.Composer);
@@ -94,8 +94,8 @@ namespace MusicGames.SongScraping.Test
             var doc = new HtmlDocument();
             doc.Load("ez2onDBSample.html.txt");
             var songNode = doc.DocumentNode.SelectSingleNode(xPath);
-            var mockLogger = new Mock<ILogger<Ez2OnParser>>();
-            var parser = new Ez2OnParser(mockLogger.Object);
+            var mockLogger = new Mock<ILogger<Ez2DbParser>>();
+            var parser = new Ez2DbParser(mockLogger.Object);
             var actualSong = parser.ParseSongFromHtmlNode(songNode);
             Assert.Equal(songTitle, actualSong.Title);
             Assert.Equal(composer, actualSong.Composer);
@@ -140,8 +140,8 @@ namespace MusicGames.SongScraping.Test
             var doc = new HtmlDocument();
             doc.Load("ez2onDBSample.html.txt");
             var songNode = doc.DocumentNode.SelectSingleNode(xPathToEz2DjSongNode);
-            var mockLogger = new Mock<ILogger<Ez2OnParser>>();
-            var parser = new Ez2OnParser(mockLogger.Object);
+            var mockLogger = new Mock<ILogger<Ez2DbParser>>();
+            var parser = new Ez2DbParser(mockLogger.Object);
             var game = parser.InferGameFromSongAlbum(songNode);
             Assert.Equal(gameTitle, game.Title);
             Assert.False(game.IsDlc);
@@ -176,8 +176,8 @@ namespace MusicGames.SongScraping.Test
             var doc = new HtmlDocument();
             doc.Load("ez2onDBSample.html.txt");
             var songNode = doc.DocumentNode.SelectSingleNode(xPathToSong);
-            var mockLogger = new Mock<ILogger<Ez2OnParser>>();
-            var parser = new Ez2OnParser(mockLogger.Object);
+            var mockLogger = new Mock<ILogger<Ez2DbParser>>();
+            var parser = new Ez2DbParser(mockLogger.Object);
             var parsedMode =
                 parser.ParseDifficultyModeFromSongNode(songNode, xPathToDifficultMode, difficultyCategory);
             Assert.Equal(difficultyLevel, parsedMode.Level);
