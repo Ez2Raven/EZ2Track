@@ -1,18 +1,26 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MusicGames.Domain", "MusicGames.Domain\MusicGames.Domain.csproj", "{F86EA6BB-E5B8-433B-BFBD-63DACD2925B7}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gaming.Domain", "Gaming.Domain\Gaming.Domain.csproj", "{F86EA6BB-E5B8-433B-BFBD-63DACD2925B7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MusicGames.Domain.Test", "MusicGames.Domain.Test\MusicGames.Domain.Test.csproj", "{07DAF2AD-C560-4DBA-8A35-C45BCE1C1F4F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gaming.Domain.Test", "Gaming.Domain.Test\Gaming.Domain.Test.csproj", "{07DAF2AD-C560-4DBA-8A35-C45BCE1C1F4F}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CleanCode.Patterns", "CleanCode.Patterns\CleanCode.Patterns.csproj", "{1981E40F-03BB-4DFB-9EBB-7827875D3ED5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MusicGames.SongScraping", "MusicGames.SongScraping\MusicGames.SongScraping.csproj", "{80E0261E-E1BD-44D2-9A54-AEC761D0045D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Crawler.SongScraping", "Crawler.SongScraping\Crawler.SongScraping.csproj", "{80E0261E-E1BD-44D2-9A54-AEC761D0045D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MusicGames.SongScraping.Test", "MusicGames.SongScraping.Test\MusicGames.SongScraping.Test.csproj", "{EB97D1EB-DABF-4C8C-9D26-DABBC7D90C8A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Crawler.SongScraping.Test", "Crawler.SongScraping.Test\Crawler.SongScraping.Test.csproj", "{EB97D1EB-DABF-4C8C-9D26-DABBC7D90C8A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SongScraping.Infrastructure", "SongScraping.Infrastructure\SongScraping.Infrastructure.csproj", "{BF208555-3590-4A6A-BCAE-7013856363F1}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MusicCatalog.EFCore", "MusicCatalog.EFCore\MusicCatalog.EFCore.csproj", "{BF208555-3590-4A6A-BCAE-7013856363F1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MusicGames.Seeding", "MusicGames.Seeding\MusicGames.Seeding.csproj", "{C102B8DE-2BA0-4A26-B321-DC70A558E5E6}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MusicCatalog.Migrations", "MusicCatalog.Migrations\MusicCatalog.Migrations.csproj", "{C102B8DE-2BA0-4A26-B321-DC70A558E5E6}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "CrawlerService", "CrawlerService", "{8DF93057-D3A7-4638-A794-A72FB99D0786}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Domain", "Domain", "{F5C1CA7B-7F20-4BE1-91BA-93DF6D011636}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "BestPractises", "BestPractises", "{E75FAD89-64E7-444E-9B57-DCF849EB67E2}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "CatalogService", "CatalogService", "{C8D84A87-11AC-4794-990D-BF3D4D91C71D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -48,5 +56,14 @@ Global
 		{C102B8DE-2BA0-4A26-B321-DC70A558E5E6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C102B8DE-2BA0-4A26-B321-DC70A558E5E6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C102B8DE-2BA0-4A26-B321-DC70A558E5E6}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{80E0261E-E1BD-44D2-9A54-AEC761D0045D} = {8DF93057-D3A7-4638-A794-A72FB99D0786}
+		{EB97D1EB-DABF-4C8C-9D26-DABBC7D90C8A} = {8DF93057-D3A7-4638-A794-A72FB99D0786}
+		{F86EA6BB-E5B8-433B-BFBD-63DACD2925B7} = {F5C1CA7B-7F20-4BE1-91BA-93DF6D011636}
+		{07DAF2AD-C560-4DBA-8A35-C45BCE1C1F4F} = {F5C1CA7B-7F20-4BE1-91BA-93DF6D011636}
+		{1981E40F-03BB-4DFB-9EBB-7827875D3ED5} = {E75FAD89-64E7-444E-9B57-DCF849EB67E2}
+		{C102B8DE-2BA0-4A26-B321-DC70A558E5E6} = {C8D84A87-11AC-4794-990D-BF3D4D91C71D}
+		{BF208555-3590-4A6A-BCAE-7013856363F1} = {C8D84A87-11AC-4794-990D-BF3D4D91C71D}
 	EndGlobalSection
 EndGlobal
