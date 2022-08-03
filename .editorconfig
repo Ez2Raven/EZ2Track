@@ -14,6 +14,7 @@
 root = true
 
 [*]
+indent_style = space
 charset = utf-8
 trim_trailing_whitespace = true
 
@@ -23,7 +24,6 @@ indent_style = space
 indent_size = 4
 
 [*.cs]
-indent_style = space
 indent_size = 4
 dotnet_sort_system_directives_first = true
 insert_final_newline = true
