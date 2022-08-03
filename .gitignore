@@ -440,4 +440,6 @@ MigrationBackup/
 FodyWeavers.xsd
 
 #SQLite DBs during development
-SongScraping.Infrastructure/streamer-site.db
+*.db
+*.db-shm
+*.db-wal
