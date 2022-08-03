@@ -1,118 +1,145 @@
 ﻿using System;
 using Bogus;
+using Gaming.Domain.Aggregates.GameAggregate;
 using Gaming.Domain.Aggregates.GameTrackAggregate;
 using Gaming.Domain.Aggregates.MusicAggregate;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace Gaming.Domain.Test
+namespace Gaming.Domain.Test;
+
+public class GamePlayListTest
 {
-    public class GamePlayListTest
+    private readonly ITestOutputHelper _output;
+    private readonly Faker _randomFluent;
+
+    public GamePlayListTest(ITestOutputHelper output)
     {
-        private readonly ITestOutputHelper _output;
-        private readonly Faker _randomFluent;
+        _output = output;
+        _randomFluent = new Faker {Random = new Randomizer(1080)};
+    }
 
-        public GamePlayListTest(ITestOutputHelper output)
+    [Fact]
+    public void Validate_GamePlayList_ReturnsTrue()
+    {
+        var playlist = new Playlist<GameTrack>();
+        for (var count = 0; count < 10; count++)
         {
-            _output = output;
-            _randomFluent = new Faker
+            var fakeSong = new Song
             {
-                Random = new Randomizer(1080)
+                Title = _randomFluent.Hacker.Phrase(),
+                Album = _randomFluent.Hacker.Phrase(),
+                Composer = _randomFluent.Person.FullName
             };
-        }
 
-        [Fact]
-        public void Validate_GamePlayList_ReturnsTrue()
-        {
-            var playlist = new Playlist<GameTrack>();
-            for (var count = 0; count < 10; count++)
+            var fakeGame = new Game
             {
-                var fakeSong = new Song
-                {
-                    Title = _randomFluent.Hacker.Phrase(),
-                    Album = _randomFluent.Hacker.Phrase(),
-                    Composer = _randomFluent.Person.FullName
-                };
+                Title = _randomFluent.Hacker.Phrase(),
+                IsDlc = _randomFluent.Random.Bool(),
+                Id = _randomFluent.Random.Int()
+            };
 
-                var fakeGameId = _randomFluent.Random.Int(0, 100);
+            var fakeMode = new DifficultyMode();
 
-                var fakeMode = new DifficultyMode();
-
-                playlist.Songs.Add(new Ez2OnGameTrack(fakeSong, fakeGameId, fakeMode));
-            }
-
-            playlist.Name = _randomFluent.Hacker.Phrase();
-            playlist.DateTimeCreated = _randomFluent.Date.Past(10, DateTime.Now);
-            playlist.DateTimeModified = _randomFluent.Date.Future(10, DateTime.Now);
-
-            var validator = new GameTrackPlaylistValidator();
-            var validationResult = validator.Validate(playlist);
-            if (!validationResult.IsValid)
-                foreach (var error in validationResult.Errors)
-                    _output.WriteLine(error.ToString());
-            Assert.True(validationResult.IsValid);
+            playlist.Songs.Add(new GameTrack(fakeSong, fakeGame, fakeMode));
         }
 
-        [Fact]
-        public void Assign_DefaultDateTimeCreated_To_GamePlayList_ReturnsFalse()
+        playlist.Name = _randomFluent.Hacker.Phrase();
+        playlist.DateTimeCreated = _randomFluent.Date.Past(10, DateTime.Now);
+        playlist.DateTimeModified = _randomFluent.Date.Future(10, DateTime.Now);
+
+        var validator = new GameTrackPlaylistValidator();
+        var validationResult = validator.Validate(playlist);
+        if (!validationResult.IsValid)
         {
-            var playlist = new Playlist<GameTrack>();
-            for (var count = 0; count < 10; count++)
+            foreach (var error in validationResult.Errors)
             {
-                var fakeSong = new Song
-                {
-                    Title = _randomFluent.Hacker.Phrase(),
-                    Album = _randomFluent.Hacker.Phrase(),
-                    Composer = _randomFluent.Person.FullName
-                };
-
-                var fakeGameId = _randomFluent.Random.Int(0, 100);
-
-                var fakeMode = new DifficultyMode();
-
-                playlist.Songs.Add(new Ez2OnGameTrack(fakeSong, fakeGameId, fakeMode));
+                _output.WriteLine(error.ToString());
             }
-
-            playlist.Name = _randomFluent.Hacker.Phrase();
-            playlist.DateTimeModified = DateTime.Now;
-            var validator = new GameTrackPlaylistValidator();
-            var validationResult = validator.Validate(playlist);
-            if (!validationResult.IsValid)
-                foreach (var error in validationResult.Errors)
-                    _output.WriteLine(error.ToString());
-            Assert.Contains(validationResult.Errors,
-                x => x.ErrorMessage == GameTrackPlaylistValidator.DateTimeCreatedErrorMessage);
         }
 
-        [Fact]
-        public void Assign_DefaultDateTimeModified_To_GamePlayList_ReturnsFalse()
+        Assert.True(validationResult.IsValid);
+    }
+
+    [Fact]
+    public void Assign_DefaultDateTimeCreated_To_GamePlayList_ReturnsFalse()
+    {
+        var playlist = new Playlist<GameTrack>();
+        for (var count = 0; count < 10; count++)
         {
-            var playlist = new Playlist<GameTrack>();
-            for (var count = 0; count < 10; count++)
+            var fakeSong = new Song
             {
-                var fakeSong = new Song
-                {
-                    Title = _randomFluent.Hacker.Phrase(),
-                    Album = _randomFluent.Hacker.Phrase(),
-                    Composer = _randomFluent.Person.FullName
-                };
+                Title = _randomFluent.Hacker.Phrase(),
+                Album = _randomFluent.Hacker.Phrase(),
+                Composer = _randomFluent.Person.FullName
+            };
 
-                var fakeGameId = _randomFluent.Random.Int(0, 100);
+            var fakeGame = new Game
+            {
+                Title = _randomFluent.Hacker.Phrase(),
+                IsDlc = _randomFluent.Random.Bool(),
+                Id = _randomFluent.Random.Int()
+            };
 
-                var fakeMode = new DifficultyMode();
+            var fakeMode = new DifficultyMode();
 
-                playlist.Songs.Add(new Ez2OnGameTrack(fakeSong, fakeGameId, fakeMode));
-            }
-
-            playlist.Name = _randomFluent.Hacker.Phrase();
-            playlist.DateTimeCreated = DateTime.Now;
-            var validator = new GameTrackPlaylistValidator();
-            var validationResult = validator.Validate(playlist);
-            if (!validationResult.IsValid)
-                foreach (var error in validationResult.Errors)
-                    _output.WriteLine(error.ToString());
-            Assert.Contains(validationResult.Errors,
-                x => x.ErrorMessage == GameTrackPlaylistValidator.DateTimeModifiedErrorMessage);
+            playlist.Songs.Add(new GameTrack(fakeSong, fakeGame, fakeMode));
         }
+
+        playlist.Name = _randomFluent.Hacker.Phrase();
+        playlist.DateTimeModified = DateTime.Now;
+        var validator = new GameTrackPlaylistValidator();
+        var validationResult = validator.Validate(playlist);
+        if (!validationResult.IsValid)
+        {
+            foreach (var error in validationResult.Errors)
+            {
+                _output.WriteLine(error.ToString());
+            }
+        }
+
+        Assert.Contains(validationResult.Errors,
+            x => x.ErrorMessage == GameTrackPlaylistValidator.DateTimeCreatedErrorMessage);
+    }
+
+    [Fact]
+    public void Assign_DefaultDateTimeModified_To_GamePlayList_ReturnsFalse()
+    {
+        var playlist = new Playlist<GameTrack>();
+        for (var count = 0; count < 10; count++)
+        {
+            var fakeSong = new Song
+            {
+                Title = _randomFluent.Hacker.Phrase(),
+                Album = _randomFluent.Hacker.Phrase(),
+                Composer = _randomFluent.Person.FullName
+            };
+
+            var fakeGame = new Game
+            {
+                Title = _randomFluent.Hacker.Phrase(),
+                IsDlc = _randomFluent.Random.Bool(),
+                Id = _randomFluent.Random.Int()
+            };
+
+            var fakeMode = new DifficultyMode();
+
+            playlist.Songs.Add(new GameTrack(fakeSong, fakeGame, fakeMode));
+        }
+
+        playlist.Name = _randomFluent.Hacker.Phrase();
+        playlist.DateTimeCreated = DateTime.Now;
+        var validator = new GameTrackPlaylistValidator();
+        var validationResult = validator.Validate(playlist);
+        if (!validationResult.IsValid)
+        {
+            foreach (var error in validationResult.Errors)
+            {
+                _output.WriteLine(error.ToString());
+            }
+        }
+
+        Assert.Contains(validationResult.Errors,
+            x => x.ErrorMessage == GameTrackPlaylistValidator.DateTimeModifiedErrorMessage);
     }
 }

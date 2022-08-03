@@ -2,19 +2,17 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MusicCatalog.EFCore.Persistence;
 
 #nullable disable
 
-namespace MusicCatalog.Migrations.GameMigration
+namespace MusicCatalog.Migrations.GameMigrations
 {
     [DbContext(typeof(GameContext))]
-    [Migration("20220801081616_InitialCreateAfterRename")]
-    partial class InitialCreateAfterRename
+    partial class GameContextModelSnapshot : ModelSnapshot
     {
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "6.0.7");
@@ -67,6 +65,7 @@ namespace MusicCatalog.Migrations.GameMigration
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("ThumbnailUrl")
+                        .IsRequired()
                         .HasMaxLength(250)
                         .HasColumnType("TEXT");
 
@@ -74,10 +73,13 @@ namespace MusicCatalog.Migrations.GameMigration
                         .HasColumnType("TEXT");
 
                     b.Property<string>("VisualizedBy")
+                        .IsRequired()
                         .HasMaxLength(250)
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("GameId");
 
                     b.HasIndex("SongId");
 
@@ -91,18 +93,22 @@ namespace MusicCatalog.Migrations.GameMigration
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Album")
+                        .IsRequired()
                         .HasMaxLength(250)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Bpm")
+                        .IsRequired()
                         .HasMaxLength(20)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Composer")
+                        .IsRequired()
                         .HasMaxLength(250)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Genre")
+                        .IsRequired()
                         .HasMaxLength(250)
                         .HasColumnType("TEXT");
 
@@ -129,18 +135,14 @@ namespace MusicCatalog.Migrations.GameMigration
                     b.ToTable("Song", (string)null);
                 });
 
-            modelBuilder.Entity("Gaming.Domain.Aggregates.GameTrackAggregate.Ez2OnGameTrack", b =>
-                {
-                    b.HasBaseType("Gaming.Domain.Aggregates.GameTrackAggregate.GameTrack");
-
-                    b.Property<int>("Ez2OnDbSequenceNumber")
-                        .HasColumnType("INTEGER");
-
-                    b.ToTable("Ez2OnGameTrack", (string)null);
-                });
-
             modelBuilder.Entity("Gaming.Domain.Aggregates.GameTrackAggregate.GameTrack", b =>
                 {
+                    b.HasOne("Gaming.Domain.Aggregates.GameAggregate.Game", "Game")
+                        .WithMany()
+                        .HasForeignKey("GameId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("Gaming.Domain.Aggregates.MusicAggregate.Song", "Song")
                         .WithMany()
                         .HasForeignKey("SongId")
@@ -168,18 +170,12 @@ namespace MusicCatalog.Migrations.GameMigration
                                 .HasForeignKey("GameTrackId");
                         });
 
-                    b.Navigation("DifficultyMode");
+                    b.Navigation("DifficultyMode")
+                        .IsRequired();
+
+                    b.Navigation("Game");
 
                     b.Navigation("Song");
-                });
-
-            modelBuilder.Entity("Gaming.Domain.Aggregates.GameTrackAggregate.Ez2OnGameTrack", b =>
-                {
-                    b.HasOne("Gaming.Domain.Aggregates.GameTrackAggregate.GameTrack", null)
-                        .WithOne()
-                        .HasForeignKey("Gaming.Domain.Aggregates.GameTrackAggregate.Ez2OnGameTrack", "Id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

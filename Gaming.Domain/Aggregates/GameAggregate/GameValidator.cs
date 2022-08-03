@@ -1,13 +1,12 @@
 ﻿using FluentValidation;
 
-namespace Gaming.Domain.Aggregates.GameAggregate
+namespace Gaming.Domain.Aggregates.GameAggregate;
+
+public class GameValidator : AbstractValidator<Game>
 {
-    public class GameValidator : AbstractValidator<Game>
+    public GameValidator()
     {
-        public GameValidator()
-        {
-            RuleFor(x => x.Title).NotEmpty();
-            RuleFor(x => x.Title).Length(1, 250);
-        }
+        RuleFor(x => x.Title).NotEmpty();
+        RuleFor(x => x.Title).Length(1, 250);
     }
 }

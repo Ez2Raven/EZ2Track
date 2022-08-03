@@ -1,11 +1,10 @@
-﻿namespace Gaming.Domain.Aggregates.GameTrackAggregate
+﻿namespace Gaming.Domain.Aggregates.GameTrackAggregate;
+
+public enum DifficultyCategory
 {
-    public enum DifficultyCategory
-    {
-        None,
-        Easy,
-        Normal,
-        Hard,
-        SuperHard
-    }
+    None,
+    Easy,
+    Normal,
+    Hard,
+    SuperHard
 }

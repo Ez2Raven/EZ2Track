@@ -1,7 +1,6 @@
-﻿namespace MusicCatalog.Migrations
+﻿namespace MusicCatalog.Migrations;
+
+public interface ISeeding
 {
-    public interface ISeeding
-    {
-        public void Seed();
-    }
+    public void Seed();
 }

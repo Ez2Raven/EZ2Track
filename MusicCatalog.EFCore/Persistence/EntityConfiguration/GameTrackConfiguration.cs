@@ -1,41 +1,42 @@
-﻿using Gaming.Domain.Aggregates.GameTrackAggregate;
+﻿using Gaming.Domain.Aggregates.GameAggregate;
+using Gaming.Domain.Aggregates.GameTrackAggregate;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace MusicCatalog.EFCore.Persistence.EntityConfiguration
+namespace MusicCatalog.EFCore.Persistence.EntityConfiguration;
+
+public sealed class GameTrackConfiguration : SeedWorkTptConfiguration<GameTrack>
 {
-    public sealed class GameTrackConfiguration : SeedWorkTptConfiguration<GameTrack>
+    public override void Configure(EntityTypeBuilder<GameTrack> builder)
     {
-        public override void Configure(EntityTypeBuilder<GameTrack> builder)
-        {
-            builder
-                .Property(gameTrack => gameTrack.GameId)
-                .IsRequired();
+        builder
+            .HasOne<Game>(track => track.Game)
+            .WithMany()
+            .HasForeignKey(track => track.GameId);
 
-            builder
-                .OwnsOne(gt => gt.DifficultyMode,
-                    dm =>
-                    {
-                        dm.Property(difficultyMode => difficultyMode.Category)
-                            .HasMaxLength(50)
-                            .IsRequired();
+        builder
+            .OwnsOne(gameTrack => gameTrack.DifficultyMode,
+                dm =>
+                {
+                    dm.Property(difficultyMode => difficultyMode.Category)
+                        .HasMaxLength(50)
+                        .IsRequired();
 
-                        dm.Property(difficultyMode => difficultyMode.Level)
-                            .HasMaxLength(5)
-                            .IsRequired();
-                    });
+                    dm.Property(difficultyMode => difficultyMode.Level)
+                        .HasMaxLength(5)
+                        .IsRequired();
+                });
 
-            builder
-                .HasOne(gt => gt.Song)
-                .WithMany()
-                .HasForeignKey(gt=>gt.SongId);
+        builder
+            .HasOne(gameTrack => gameTrack.Song)
+            .WithMany()
+            .HasForeignKey(gameTrack => gameTrack.SongId);
 
-            builder
-                .Property(gameTrack => gameTrack.ThumbnailUrl)
-                .HasMaxLength(250);
+        builder
+            .Property(gameTrack => gameTrack.ThumbnailUrl)
+            .HasMaxLength(250);
 
-            builder
-                .Property(gameTrack => gameTrack.VisualizedBy)
-                .HasMaxLength(250);
-        }
+        builder
+            .Property(gameTrack => gameTrack.VisualizedBy)
+            .HasMaxLength(250);
     }
 }
