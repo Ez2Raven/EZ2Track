@@ -1,4 +1,4 @@
-## Welcome to GitHub Pages
+## Welcome to Ez2Track
 
 You can use the [editor on GitHub](https://github.com/Ez2Raven/streamer-site/edit/main/docs/index.md) to maintain and
 preview the content for your website in Markdown files.
