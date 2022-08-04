@@ -443,3 +443,9 @@ FodyWeavers.xsd
 *.db
 *.db-shm
 *.db-wal
+
+# Jekyll ruby files
+_site
+.sass-cache
+.jekyll-metadata
+Gemfile.lock
