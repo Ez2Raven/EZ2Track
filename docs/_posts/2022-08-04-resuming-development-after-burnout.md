@@ -1,6 +1,9 @@
 ﻿---
-layout: post
-title: "Let's refresh and baseline Ez2Track development"
+title: "Let's refresh and baseline EZ2Track development"
+excerpt_separator: "<!--more-->"
+categories: "Blog"
+tags: "Software Engineering"
+toc: true
 ---
 
 # Enforcing Development and Engineering practises
@@ -14,6 +17,8 @@ within the boundaries of coding.
 AFAIK, there are already practises in the FOSS community for the above. However it is unclear if
 such practices are well defined in the working industry.
 
+<!--more-->
+
 # What exactly is within the boundaries of coding?
 
 A few topics are shortlisted that can help developers to be more 'agile' when it comes to software
@@ -24,7 +29,9 @@ engineering practices.
     - [Jekyllrb](https://jekyllrb.com) generates html from markdown files
 - Diagram as Code
     - [Diagrams, python package that generate diagrams](https://github.com/mingrammer/diagrams)
-      ![Sample](..\assets\img\ez2crawl_overview.png)
+    <figure>
+      <img src="{{ '/assets/images/ez2crawl_overview.png' | relative_url }}" alt="image generated using diagrams">
+    </figure>
 - Infrastructure as Code
     - Terraform
     - docker
