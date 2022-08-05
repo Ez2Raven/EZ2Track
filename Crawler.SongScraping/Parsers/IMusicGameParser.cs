@@ -11,7 +11,7 @@ namespace Crawler.SongScraping.Parsers;
 
 public interface IMusicGameParser
 {
-    List<IGameTrack> ParseGameTracks(HtmlNodeCollection rowsOfSongNodes);
+    List<IGameTrack> Process(HtmlNodeCollection rowsOfSongNodes);
     Game ParseGameInfo(HtmlNode songNode);
 
     DifficultyMode ParseDifficultyMode(HtmlNode songNode, string xPathToDifficultyLevel,

@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using Crawler.SongScraping.Parsers.Exceptions;
 using Gaming.Domain.Aggregates.GameAggregate;
 using Gaming.Domain.Aggregates.GameTrackAggregate;
 using Gaming.Domain.Aggregates.MusicAggregate;
@@ -31,7 +30,7 @@ public class Ez2DbParser : IMusicGameParser
     private string XPathToSongBpm { get; } = "td[9]";
 
 
-    public List<IGameTrack> ParseGameTracks(HtmlNodeCollection rowsOfSongNodes)
+    public List<IGameTrack> Process(HtmlNodeCollection rowsOfSongNodes)
     {
         var ez2OnGameTracks = new List<IGameTrack>();
         foreach (var songNode in rowsOfSongNodes)
@@ -95,13 +94,8 @@ public class Ez2DbParser : IMusicGameParser
         var difficultyMode = new DifficultyMode();
         var difficultLevelNode = songNode.SelectSingleNode(xPathToDifficultyLevel);
         difficultyMode.Level = int.TryParse(difficultLevelNode?.InnerText, out var difficulty) ? difficulty : 0;
+
         difficultyMode.Category = category;
-
-        if (difficultyMode.Level == 0)
-        {
-            throw new ParserException("Game track difficulty level cannot be zero");
-        }
-
         return difficultyMode;
     }
 
@@ -124,7 +118,7 @@ public class Ez2DbParser : IMusicGameParser
 
     private IEnumerable<Ez2DbGameTrack> ParseGameTracksFromSingleSong(HtmlNode songNode)
     {
-        var songSpecificGameTracks = new List<Ez2DbGameTrack>();
+        var ganeTracks = new List<Ez2DbGameTrack>();
         var game = ParseGameInfo(songNode);
 
         if (game.Id != 0)
@@ -142,7 +136,7 @@ public class Ez2DbParser : IMusicGameParser
             var ezMode =
                 ParseDifficultyMode(songNode, XPathToEzDifficultyLevel, DifficultyCategory.Easy);
 
-            songSpecificGameTracks.Add(new Ez2DbGameTrack(song, game, ezMode)
+            ganeTracks.Add(new Ez2DbGameTrack(song, game, ezMode)
             {
                 Ez2OnDbSequenceNumber = ez2OnDbSequenceNumber, ThumbnailUrl = thumbnailUrl
             });
@@ -150,7 +144,7 @@ public class Ez2DbParser : IMusicGameParser
             var nmMode =
                 ParseDifficultyMode(songNode, XPathToNmDifficultyLevel, DifficultyCategory.Normal);
 
-            songSpecificGameTracks.Add(new Ez2DbGameTrack(song, game, nmMode)
+            ganeTracks.Add(new Ez2DbGameTrack(song, game, nmMode)
             {
                 Ez2OnDbSequenceNumber = ez2OnDbSequenceNumber, ThumbnailUrl = thumbnailUrl
             });
@@ -158,7 +152,7 @@ public class Ez2DbParser : IMusicGameParser
             var hdMode =
                 ParseDifficultyMode(songNode, XPathToHdDifficultyLevel, DifficultyCategory.Hard);
 
-            songSpecificGameTracks.Add(new Ez2DbGameTrack(song, game, hdMode)
+            ganeTracks.Add(new Ez2DbGameTrack(song, game, hdMode)
             {
                 Ez2OnDbSequenceNumber = ez2OnDbSequenceNumber, ThumbnailUrl = thumbnailUrl
             });
@@ -166,12 +160,12 @@ public class Ez2DbParser : IMusicGameParser
             var shdMode =
                 ParseDifficultyMode(songNode, XPathToShdDifficultyLevel, DifficultyCategory.SuperHard);
 
-            songSpecificGameTracks.Add(new Ez2DbGameTrack(song, game, shdMode)
+            ganeTracks.Add(new Ez2DbGameTrack(song, game, shdMode)
             {
                 Ez2OnDbSequenceNumber = ez2OnDbSequenceNumber, ThumbnailUrl = thumbnailUrl
             });
         }
 
-        return songSpecificGameTracks;
+        return ganeTracks;
     }
 }

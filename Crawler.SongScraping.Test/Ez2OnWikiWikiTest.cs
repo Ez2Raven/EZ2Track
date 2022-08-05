@@ -1,6 +1,5 @@
 using CleanCode.Patterns.DataStructures;
-using Crawler.SongScraping.Parsers.Exceptions;
-using Crawler.SongScraping.Parsers.Ez2Db;
+using Crawler.SongScraping.Parsers.Ez2OnWikiWiki;
 using FluentAssertions;
 using Gaming.Domain.Aggregates.GameAggregate;
 using Gaming.Domain.Aggregates.GameTrackAggregate;
@@ -13,48 +12,46 @@ using Xunit.Abstractions;
 
 namespace Crawler.SongScraping.Test;
 
-public class Ez2DbTest
+public class Ez2OnWikiWikiTest
 {
     private readonly ITestOutputHelper _output;
 
-    public Ez2DbTest(ITestOutputHelper output)
+    public Ez2OnWikiWikiTest(ITestOutputHelper output)
     {
         _output = output;
     }
 
-    [Fact(Skip = "Ez2DB has been shut down by NeoNovice")]
+    [Fact]
     public void Can_Load_DynamicHTML()
     {
-        var url = "https://ez2on.co.kr/6K/?mode=database&pagelist=218";
+        var url = "https://wikiwiki.jp/ez2on/LevelList/List";
 
         var web1 = new HtmlWeb();
         var loadUrlTask = web1.LoadFromWebAsync(url);
         var htmlDoc = loadUrlTask.Result;
-        var xpath = "/html/body/div[@id='contentmain']/table[@id='EZ2ONContent']/tbody[@id='EZ2DJ_TRACKS']";
+        var xpath =
+            "//*[@id=\"content\"]/h2[contains(text(), '難易度表 (STANDARD)')]/following-sibling::div/div/table/tbody";
         var ez2OnContentTable = htmlDoc.DocumentNode.SelectSingleNode(xpath);
         ez2OnContentTable.Should().NotBeNull();
     }
 
-    [Theory(Skip = "Ez2DB has been shut down by NeoNovice")]
-    [InlineData("4K", "218", 845)]
-    [InlineData("5K", "218", 838)]
-    [InlineData("6K", "218", 735)]
-    [InlineData("8K", "218", 329)]
-    public void Can_ParseDynamicHTML_As_GameTracks(string keyMode, string numOfSongs, int numOfGameTracks)
+    [Fact]
+    public void Can_ParseDynamicHTML_As_GameTracks()
     {
-        var url = $"https://ez2on.co.kr/{keyMode}/?mode=database&pagelist={numOfSongs}";
+        var url = "https://wikiwiki.jp/ez2on/LevelList/List";
 
         var web1 = new HtmlWeb();
         var loadUrlTask = web1.LoadFromWebAsync(url);
         var htmlDoc = loadUrlTask.Result;
-        var xpath = "/html/body/div[@id='contentmain']/table[@id='EZ2ONContent']/tbody[@id='EZ2DJ_TRACKS']/tr";
+        var xpath =
+            "//*[@id=\"content\"]/h2[contains(text(), '難易度表 (STANDARD)')]/following-sibling::div/div/table/tbody";
         var songNodes = htmlDoc.DocumentNode.SelectNodes(xpath);
 
-        var mockLogger = new Mock<ILogger<Ez2DbParser>>();
-        var parser = new Ez2DbParser(mockLogger.Object);
+        var mockLogger = new Mock<ILogger<Ez2OnWikiWikiGameTrackParser>>();
+        var parser = new Ez2OnWikiWikiGameTrackParser(mockLogger.Object);
 
         var ez2OnGameTracks = parser.Process(songNodes);
-        ez2OnGameTracks.Count.Should().Be(numOfGameTracks);
+        ez2OnGameTracks.Count.Should().BeGreaterThan(0);
     }
 
 
@@ -69,8 +66,8 @@ public class Ez2DbTest
         var doc = new HtmlDocument();
         doc.Load("ez2onDBSample.html.txt");
         var songNode = doc.DocumentNode.SelectSingleNode(xPath);
-        var mockLogger = new Mock<ILogger<Ez2DbParser>>();
-        var parser = new Ez2DbParser(mockLogger.Object);
+        var mockLogger = new Mock<ILogger<Ez2OnWikiWikiGameTrackParser>>();
+        var parser = new Ez2OnWikiWikiGameTrackParser(mockLogger.Object);
         var actualSong = parser.ParseSongInfo(songNode);
         Assert.Equal(songTitle, actualSong.Title);
         Assert.Equal(composer, actualSong.Composer);
@@ -102,8 +99,8 @@ public class Ez2DbTest
         var doc = new HtmlDocument();
         doc.Load("ez2onDBSample.html.txt");
         var songNode = doc.DocumentNode.SelectSingleNode(xPath);
-        var mockLogger = new Mock<ILogger<Ez2DbParser>>();
-        var parser = new Ez2DbParser(mockLogger.Object);
+        var mockLogger = new Mock<ILogger<Ez2OnWikiWikiGameTrackParser>>();
+        var parser = new Ez2OnWikiWikiGameTrackParser(mockLogger.Object);
         var actualSong = parser.ParseSongInfo(songNode);
         Assert.Equal(songTitle, actualSong.Title);
         Assert.Equal(composer, actualSong.Composer);
@@ -121,7 +118,7 @@ public class Ez2DbTest
             }
         }
 
-        validationResult.IsValid.Should().BeTrue();
+        Assert.True(validationResult.IsValid);
     }
 
     [Theory]
@@ -152,8 +149,8 @@ public class Ez2DbTest
         var doc = new HtmlDocument();
         doc.Load("ez2onDBSample.html.txt");
         var songNode = doc.DocumentNode.SelectSingleNode(xPathToEz2DjSongNode);
-        var mockLogger = new Mock<ILogger<Ez2DbParser>>();
-        var parser = new Ez2DbParser(mockLogger.Object);
+        var mockLogger = new Mock<ILogger<Ez2OnWikiWikiGameTrackParser>>();
+        var parser = new Ez2OnWikiWikiGameTrackParser(mockLogger.Object);
         var game = parser.ParseGameInfo(songNode);
         Assert.Equal(gameTitle, game.Title);
         Assert.False(game.IsDlc);
@@ -167,7 +164,7 @@ public class Ez2DbTest
             }
         }
 
-        validationResult.IsValid.Should().BeTrue();
+        Assert.True(validationResult.IsValid);
     }
 
     [Theory]
@@ -177,6 +174,8 @@ public class Ez2DbTest
         "td[6]/a", 5, "Normal")]
     [InlineData("/html/body/div[@id='contentmain']/table[@id='EZ2ONContent']/tbody[@id='EZ2DJ_TRACKS']/tr[1]",
         "td[7]/a", 7, "Hard")]
+    [InlineData("/html/body/div[@id='contentmain']/table[@id='EZ2ONContent']/tbody[@id='EZ2DJ_TRACKS']/tr[1]",
+        "td[8]/a", 0, "None")]
     [InlineData("/html/body/div[@id='contentmain']/table[@id='EZ2ONContent']/tbody[@id='EZ2DJ_TRACKS']/tr[6]",
         "td[5]/a", 4, "Easy")]
     [InlineData("/html/body/div[@id='contentmain']/table[@id='EZ2ONContent']/tbody[@id='EZ2DJ_TRACKS']/tr[6]",
@@ -184,35 +183,19 @@ public class Ez2DbTest
     [InlineData("/html/body/div[@id='contentmain']/table[@id='EZ2ONContent']/tbody[@id='EZ2DJ_TRACKS']/tr[6]",
         "td[7]/a", 11, "Hard")]
     [InlineData("/html/body/div[@id='contentmain']/table[@id='EZ2ONContent']/tbody[@id='EZ2DJ_TRACKS']/tr[6]",
-        "td[8]/a", 14, "SHD")]
+        "td[8]/a", 14, "SuperHard")]
     public void Can_ParseSongDifficultModes(string xPathToSong, string xPathToDifficultMode, int difficultyLevel,
-        string difficultyCategoryName)
+        string difficultyCategory)
     {
         var doc = new HtmlDocument();
         doc.Load("ez2onDBSample.html.txt");
         var songNode = doc.DocumentNode.SelectSingleNode(xPathToSong);
-        var mockLogger = new Mock<ILogger<Ez2DbParser>>();
-        var parser = new Ez2DbParser(mockLogger.Object);
-        var difficultyCategory = Enumeration.FromDisplayName<DifficultyCategory>(difficultyCategoryName);
-        var expectedDifficultyMode =
-            parser.ParseDifficultyMode(songNode, xPathToDifficultMode, difficultyCategory);
-        expectedDifficultyMode.Level.Should().Be(difficultyLevel);
-        expectedDifficultyMode.Category.Should().Be(difficultyCategory);
-    }
-
-    [Theory]
-    [InlineData("/html/body/div[@id='contentmain']/table[@id='EZ2ONContent']/tbody[@id='EZ2DJ_TRACKS']/tr[1]",
-        "td[8]/a", "None")]
-    public void Throws_ParserException_For_InvalidDifficultMode(string xPathToSong, string xPathToDifficultMode,
-        string difficultyCategoryName)
-    {
-        var doc = new HtmlDocument();
-        doc.Load("ez2onDBSample.html.txt");
-        var songNode = doc.DocumentNode.SelectSingleNode(xPathToSong);
-        var mockLogger = new Mock<ILogger<Ez2DbParser>>();
-        var parser = new Ez2DbParser(mockLogger.Object);
-        var difficultyCategory = Enumeration.FromDisplayName<DifficultyCategory>(difficultyCategoryName);
-        var action = () => parser.ParseDifficultyMode(songNode, xPathToDifficultMode, difficultyCategory);
-        action.Should().Throw<ParserException>().WithMessage("Game track difficulty level cannot be zero");
+        var mockLogger = new Mock<ILogger<Ez2OnWikiWikiGameTrackParser>>();
+        var parser = new Ez2OnWikiWikiGameTrackParser(mockLogger.Object);
+        var parsedMode =
+            parser.ParseDifficultyMode(songNode, xPathToDifficultMode,
+                Enumeration.FromDisplayName<DifficultyCategory>(difficultyCategory));
+        Assert.Equal(difficultyLevel, parsedMode.Level);
+        Assert.Equal(difficultyCategory, parsedMode.Category.Name);
     }
 }
