@@ -3,6 +3,7 @@ using Crawler.SongScraping.Parsers.Exceptions;
 using Gaming.Domain.Aggregates.GameAggregate;
 using Gaming.Domain.Aggregates.GameTrackAggregate;
 using Gaming.Domain.Aggregates.MusicAggregate;
+using Gaming.Domain.Ez2on;
 using HtmlAgilityPack;
 using Microsoft.Extensions.Logging;
 
@@ -48,21 +49,37 @@ public class Ez2DbParser : IMusicGameParser
         switch (album.ToUpper())
         {
             case "1ST TRACKS":
+                ez2djGame = new Game {Title = Ez2OnReleaseTitle.FirstTrax.Name, IsDlc = false};
+                break;
             case "2ND TRAX":
+                ez2djGame = new Game {Title = Ez2OnReleaseTitle.SecondTrax.Name, IsDlc = false};
+                break;
             case "3RD TRAX":
+                ez2djGame = new Game {Title = Ez2OnReleaseTitle.ThirdTrax.Name, IsDlc = false};
+                break;
             case "4TH TRAX":
+                ez2djGame = new Game {Title = Ez2OnReleaseTitle.FourthTrax.Name, IsDlc = false};
+                break;
             case "PLATINUM":
+                ez2djGame = new Game {Title = Ez2OnReleaseTitle.Platinum.Name, IsDlc = false};
+                break;
             case "6TH TRAX":
+                ez2djGame = new Game {Title = Ez2OnReleaseTitle.SixthTrax.Name, IsDlc = false};
+                break;
             case "7TH TRAX":
-                ez2djGame = new Game {Title = $"EZ2DJ {album.ToUpper()}", IsDlc = false};
+                ez2djGame = new Game {Title = Ez2OnReleaseTitle.SeventhTrax.Name, IsDlc = false};
                 break;
             case "S/E":
-                ez2djGame = new Game {Title = "EZ2DJ Special Edition", IsDlc = false};
+                ez2djGame = new Game {Title = Ez2OnReleaseTitle.SpecialEdition.Name, IsDlc = false};
                 break;
             case "2008":
+                ez2djGame = new Game {Title = Ez2OnReleaseTitle.Ez2On2008.Name, IsDlc = false};
+                break;
             case "2013":
+                ez2djGame = new Game {Title = Ez2OnReleaseTitle.Ez2On2013.Name, IsDlc = false};
+                break;
             case "2021":
-                ez2djGame = new Game {Title = $"EZ2ON {album.ToUpper()}", IsDlc = false};
+                ez2djGame = new Game {Title = Ez2OnReleaseTitle.Ez2On2021.Name, IsDlc = false};
                 break;
             default:
                 ez2djGame = new Game {Title = $"{album.ToUpper()}", IsDlc = true};
