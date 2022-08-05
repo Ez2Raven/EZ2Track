@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Linq;
-using Crawler.SongScraping.Parsers;
+using Crawler.SongScraping.Parsers.Ez2Db;
 using Gaming.Domain.Aggregates.GameAggregate;
 using Gaming.Domain.Aggregates.GameTrackAggregate;
 using Gaming.Domain.Aggregates.MusicAggregate;

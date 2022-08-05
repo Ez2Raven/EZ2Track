@@ -2,7 +2,7 @@
 using Gaming.Domain.Aggregates.GameTrackAggregate;
 using Gaming.Domain.Aggregates.MusicAggregate;
 
-namespace Crawler.SongScraping.Parsers;
+namespace Crawler.SongScraping.Parsers.Ez2Db;
 
 /// <summary>
 ///     Game Tracks from Ez2DB has a DB Sequence number that will be ignored

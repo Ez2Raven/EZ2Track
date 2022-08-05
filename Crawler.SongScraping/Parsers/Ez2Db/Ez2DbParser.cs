@@ -1,13 +1,14 @@
 ﻿using System.Collections.Generic;
+using Crawler.SongScraping.Parsers.Exceptions;
 using Gaming.Domain.Aggregates.GameAggregate;
 using Gaming.Domain.Aggregates.GameTrackAggregate;
 using Gaming.Domain.Aggregates.MusicAggregate;
 using HtmlAgilityPack;
 using Microsoft.Extensions.Logging;
 
-namespace Crawler.SongScraping.Parsers;
+namespace Crawler.SongScraping.Parsers.Ez2Db;
 
-public class Ez2DbParser
+public class Ez2DbParser : IMusicGameParser
 {
     private readonly ILogger<Ez2DbParser> _logger;
 
@@ -29,10 +30,10 @@ public class Ez2DbParser
     private string XPathToSongBpm { get; } = "td[9]";
 
 
-    public List<Ez2DbGameTrack> AggregateGameTracksForAllSongs(HtmlNodeCollection songNodes)
+    public List<IGameTrack> ParseGameTracks(HtmlNodeCollection rowsOfSongNodes)
     {
-        var ez2OnGameTracks = new List<Ez2DbGameTrack>();
-        foreach (var songNode in songNodes)
+        var ez2OnGameTracks = new List<IGameTrack>();
+        foreach (var songNode in rowsOfSongNodes)
         {
             ez2OnGameTracks.AddRange(ParseGameTracksFromSingleSong(songNode));
         }
@@ -40,72 +41,7 @@ public class Ez2DbParser
         return ez2OnGameTracks;
     }
 
-    private IEnumerable<Ez2DbGameTrack> ParseGameTracksFromSingleSong(HtmlNode songNode)
-    {
-        var songSpecificGameTracks = new List<Ez2DbGameTrack>();
-        var game = InferGameFromSongAlbum(songNode);
-
-        if (game.Id != 0)
-        {
-            var song = ParseSongFromHtmlNode(songNode);
-
-            var ez2OnDbSequenceNumber =
-                int.TryParse(songNode.SelectSingleNode(XPathToSequenceNumber)?.InnerText, out var seqNum)
-                    ? seqNum
-                    : 0;
-
-            var thumbnailUrl = songNode.SelectSingleNode(XPathToThumbnail)
-                .GetAttributeValue("src", string.Empty);
-
-            var ezMode =
-                ParseDifficultyModeFromSongNode(songNode, XPathToEzDifficultyLevel, DifficultyCategory.Easy);
-
-            if (ezMode.Category != DifficultyCategory.None)
-            {
-                songSpecificGameTracks.Add(new Ez2DbGameTrack(song, game, ezMode)
-                {
-                    Ez2OnDbSequenceNumber = ez2OnDbSequenceNumber, ThumbnailUrl = thumbnailUrl
-                });
-            }
-
-            var nmMode =
-                ParseDifficultyModeFromSongNode(songNode, XPathToNmDifficultyLevel, DifficultyCategory.Normal);
-
-            if (nmMode.Category != DifficultyCategory.None)
-            {
-                songSpecificGameTracks.Add(new Ez2DbGameTrack(song, game, nmMode)
-                {
-                    Ez2OnDbSequenceNumber = ez2OnDbSequenceNumber, ThumbnailUrl = thumbnailUrl
-                });
-            }
-
-            var hdMode =
-                ParseDifficultyModeFromSongNode(songNode, XPathToHdDifficultyLevel, DifficultyCategory.Hard);
-
-            if (hdMode.Category != DifficultyCategory.None)
-            {
-                songSpecificGameTracks.Add(new Ez2DbGameTrack(song, game, hdMode)
-                {
-                    Ez2OnDbSequenceNumber = ez2OnDbSequenceNumber, ThumbnailUrl = thumbnailUrl
-                });
-            }
-
-            var shdMode =
-                ParseDifficultyModeFromSongNode(songNode, XPathToShdDifficultyLevel, DifficultyCategory.SuperHard);
-
-            if (shdMode.Category != DifficultyCategory.None)
-            {
-                songSpecificGameTracks.Add(new Ez2DbGameTrack(song, game, shdMode)
-                {
-                    Ez2OnDbSequenceNumber = ez2OnDbSequenceNumber, ThumbnailUrl = thumbnailUrl
-                });
-            }
-        }
-
-        return songSpecificGameTracks;
-    }
-
-    public Game InferGameFromSongAlbum(HtmlNode songNode)
+    public Game ParseGameInfo(HtmlNode songNode)
     {
         var album = songNode.SelectSingleNode(XPathToAlbum).InnerText.Trim();
         Game ez2djGame;
@@ -136,7 +72,7 @@ public class Ez2DbParser
         return ez2djGame;
     }
 
-    public DifficultyMode ParseDifficultyModeFromSongNode(HtmlNode songNode, string xPathToDifficultyLevel,
+    public DifficultyMode ParseDifficultyMode(HtmlNode songNode, string xPathToDifficultyLevel,
         DifficultyCategory category)
     {
         var difficultyMode = new DifficultyMode();
@@ -146,14 +82,13 @@ public class Ez2DbParser
 
         if (difficultyMode.Level == 0)
         {
-            _logger.LogWarning("Unable to parse DifficultyMode Level. " +
-                               "Consider verifying song difficult level from source");
+            throw new ParserException("Game track difficulty level cannot be zero");
         }
 
         return difficultyMode;
     }
 
-    public Song ParseSongFromHtmlNode(HtmlNode songNode)
+    public Song ParseSongInfo(HtmlNode songNode)
     {
         var remixNode = songNode.SelectSingleNode(XPathToSongRemixTag);
         var remix = remixNode?.InnerText.Trim();
@@ -168,5 +103,58 @@ public class Ez2DbParser
             Bpm = songNode.SelectSingleNode(XPathToSongBpm).InnerText.Trim()
         };
         return song;
+    }
+
+    private IEnumerable<Ez2DbGameTrack> ParseGameTracksFromSingleSong(HtmlNode songNode)
+    {
+        var songSpecificGameTracks = new List<Ez2DbGameTrack>();
+        var game = ParseGameInfo(songNode);
+
+        if (game.Id != 0)
+        {
+            var song = ParseSongInfo(songNode);
+
+            var ez2OnDbSequenceNumber =
+                int.TryParse(songNode.SelectSingleNode(XPathToSequenceNumber)?.InnerText, out var seqNum)
+                    ? seqNum
+                    : 0;
+
+            var thumbnailUrl = songNode.SelectSingleNode(XPathToThumbnail)
+                .GetAttributeValue("src", string.Empty);
+
+            var ezMode =
+                ParseDifficultyMode(songNode, XPathToEzDifficultyLevel, DifficultyCategory.Easy);
+
+            songSpecificGameTracks.Add(new Ez2DbGameTrack(song, game, ezMode)
+            {
+                Ez2OnDbSequenceNumber = ez2OnDbSequenceNumber, ThumbnailUrl = thumbnailUrl
+            });
+
+            var nmMode =
+                ParseDifficultyMode(songNode, XPathToNmDifficultyLevel, DifficultyCategory.Normal);
+
+            songSpecificGameTracks.Add(new Ez2DbGameTrack(song, game, nmMode)
+            {
+                Ez2OnDbSequenceNumber = ez2OnDbSequenceNumber, ThumbnailUrl = thumbnailUrl
+            });
+
+            var hdMode =
+                ParseDifficultyMode(songNode, XPathToHdDifficultyLevel, DifficultyCategory.Hard);
+
+            songSpecificGameTracks.Add(new Ez2DbGameTrack(song, game, hdMode)
+            {
+                Ez2OnDbSequenceNumber = ez2OnDbSequenceNumber, ThumbnailUrl = thumbnailUrl
+            });
+
+            var shdMode =
+                ParseDifficultyMode(songNode, XPathToShdDifficultyLevel, DifficultyCategory.SuperHard);
+
+            songSpecificGameTracks.Add(new Ez2DbGameTrack(song, game, shdMode)
+            {
+                Ez2OnDbSequenceNumber = ez2OnDbSequenceNumber, ThumbnailUrl = thumbnailUrl
+            });
+        }
+
+        return songSpecificGameTracks;
     }
 }

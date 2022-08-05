@@ -1,4 +1,7 @@
-using Crawler.SongScraping.Parsers;
+using CleanCode.Patterns.DataStructures;
+using Crawler.SongScraping.Parsers.Exceptions;
+using Crawler.SongScraping.Parsers.Ez2Db;
+using FluentAssertions;
 using Gaming.Domain.Aggregates.GameAggregate;
 using Gaming.Domain.Aggregates.GameTrackAggregate;
 using Gaming.Domain.Aggregates.MusicAggregate;
@@ -29,7 +32,7 @@ public class Ez2DbTest
         var htmlDoc = loadUrlTask.Result;
         var xpath = "/html/body/div[@id='contentmain']/table[@id='EZ2ONContent']/tbody[@id='EZ2DJ_TRACKS']";
         var ez2OnContentTable = htmlDoc.DocumentNode.SelectSingleNode(xpath);
-        Assert.NotNull(ez2OnContentTable);
+        ez2OnContentTable.Should().NotBeNull();
     }
 
     [Theory(Skip = "Ez2DB has been shut down by NeoNovice")]
@@ -50,8 +53,8 @@ public class Ez2DbTest
         var mockLogger = new Mock<ILogger<Ez2DbParser>>();
         var parser = new Ez2DbParser(mockLogger.Object);
 
-        var ez2OnGameTracks = parser.AggregateGameTracksForAllSongs(songNodes);
-        Assert.Equal(numOfGameTracks, ez2OnGameTracks.Count);
+        var ez2OnGameTracks = parser.ParseGameTracks(songNodes);
+        ez2OnGameTracks.Count.Should().Be(numOfGameTracks);
     }
 
 
@@ -68,7 +71,7 @@ public class Ez2DbTest
         var songNode = doc.DocumentNode.SelectSingleNode(xPath);
         var mockLogger = new Mock<ILogger<Ez2DbParser>>();
         var parser = new Ez2DbParser(mockLogger.Object);
-        var actualSong = parser.ParseSongFromHtmlNode(songNode);
+        var actualSong = parser.ParseSongInfo(songNode);
         Assert.Equal(songTitle, actualSong.Title);
         Assert.Equal(composer, actualSong.Composer);
         Assert.Equal(bpm, actualSong.Bpm);
@@ -84,7 +87,7 @@ public class Ez2DbTest
             }
         }
 
-        Assert.True(validationResult.IsValid);
+        validationResult.IsValid.Should().BeTrue();
     }
 
     [Theory]
@@ -101,7 +104,7 @@ public class Ez2DbTest
         var songNode = doc.DocumentNode.SelectSingleNode(xPath);
         var mockLogger = new Mock<ILogger<Ez2DbParser>>();
         var parser = new Ez2DbParser(mockLogger.Object);
-        var actualSong = parser.ParseSongFromHtmlNode(songNode);
+        var actualSong = parser.ParseSongInfo(songNode);
         Assert.Equal(songTitle, actualSong.Title);
         Assert.Equal(composer, actualSong.Composer);
         Assert.Equal(bpm, actualSong.Bpm);
@@ -118,7 +121,7 @@ public class Ez2DbTest
             }
         }
 
-        Assert.True(validationResult.IsValid);
+        validationResult.IsValid.Should().BeTrue();
     }
 
     [Theory]
@@ -151,7 +154,7 @@ public class Ez2DbTest
         var songNode = doc.DocumentNode.SelectSingleNode(xPathToEz2DjSongNode);
         var mockLogger = new Mock<ILogger<Ez2DbParser>>();
         var parser = new Ez2DbParser(mockLogger.Object);
-        var game = parser.InferGameFromSongAlbum(songNode);
+        var game = parser.ParseGameInfo(songNode);
         Assert.Equal(gameTitle, game.Title);
         Assert.False(game.IsDlc);
         var gameValidator = new GameValidator();
@@ -164,37 +167,52 @@ public class Ez2DbTest
             }
         }
 
-        Assert.True(validationResult.IsValid);
+        validationResult.IsValid.Should().BeTrue();
     }
 
     [Theory]
     [InlineData("/html/body/div[@id='contentmain']/table[@id='EZ2ONContent']/tbody[@id='EZ2DJ_TRACKS']/tr[1]",
-        "td[5]/a", 3, DifficultyCategory.Easy)]
+        "td[5]/a", 3, "Easy")]
     [InlineData("/html/body/div[@id='contentmain']/table[@id='EZ2ONContent']/tbody[@id='EZ2DJ_TRACKS']/tr[1]",
-        "td[6]/a", 5, DifficultyCategory.Normal)]
+        "td[6]/a", 5, "Normal")]
     [InlineData("/html/body/div[@id='contentmain']/table[@id='EZ2ONContent']/tbody[@id='EZ2DJ_TRACKS']/tr[1]",
-        "td[7]/a", 7, DifficultyCategory.Hard)]
-    [InlineData("/html/body/div[@id='contentmain']/table[@id='EZ2ONContent']/tbody[@id='EZ2DJ_TRACKS']/tr[1]",
-        "td[8]/a", 0, DifficultyCategory.None)]
+        "td[7]/a", 7, "Hard")]
     [InlineData("/html/body/div[@id='contentmain']/table[@id='EZ2ONContent']/tbody[@id='EZ2DJ_TRACKS']/tr[6]",
-        "td[5]/a", 4, DifficultyCategory.Easy)]
+        "td[5]/a", 4, "Easy")]
     [InlineData("/html/body/div[@id='contentmain']/table[@id='EZ2ONContent']/tbody[@id='EZ2DJ_TRACKS']/tr[6]",
-        "td[6]/a", 8, DifficultyCategory.Normal)]
+        "td[6]/a", 8, "Normal")]
     [InlineData("/html/body/div[@id='contentmain']/table[@id='EZ2ONContent']/tbody[@id='EZ2DJ_TRACKS']/tr[6]",
-        "td[7]/a", 11, DifficultyCategory.Hard)]
+        "td[7]/a", 11, "Hard")]
     [InlineData("/html/body/div[@id='contentmain']/table[@id='EZ2ONContent']/tbody[@id='EZ2DJ_TRACKS']/tr[6]",
-        "td[8]/a", 14, DifficultyCategory.SuperHard)]
+        "td[8]/a", 14, "SHD")]
     public void Can_ParseSongDifficultModes(string xPathToSong, string xPathToDifficultMode, int difficultyLevel,
-        DifficultyCategory difficultyCategory)
+        string difficultyCategoryName)
     {
         var doc = new HtmlDocument();
         doc.Load("ez2onDBSample.html.txt");
         var songNode = doc.DocumentNode.SelectSingleNode(xPathToSong);
         var mockLogger = new Mock<ILogger<Ez2DbParser>>();
         var parser = new Ez2DbParser(mockLogger.Object);
-        var parsedMode =
-            parser.ParseDifficultyModeFromSongNode(songNode, xPathToDifficultMode, difficultyCategory);
-        Assert.Equal(difficultyLevel, parsedMode.Level);
-        Assert.Equal(difficultyCategory, parsedMode.Category);
+        var difficultyCategory = Enumeration.FromDisplayName<DifficultyCategory>(difficultyCategoryName);
+        var expectedDifficultyMode =
+            parser.ParseDifficultyMode(songNode, xPathToDifficultMode, difficultyCategory);
+        expectedDifficultyMode.Level.Should().Be(difficultyLevel);
+        expectedDifficultyMode.Category.Should().Be(difficultyCategory);
+    }
+
+    [Theory]
+    [InlineData("/html/body/div[@id='contentmain']/table[@id='EZ2ONContent']/tbody[@id='EZ2DJ_TRACKS']/tr[1]",
+        "td[8]/a", "None")]
+    public void Throws_ParserException_For_InvalidDifficultMode(string xPathToSong, string xPathToDifficultMode,
+        string difficultyCategoryName)
+    {
+        var doc = new HtmlDocument();
+        doc.Load("ez2onDBSample.html.txt");
+        var songNode = doc.DocumentNode.SelectSingleNode(xPathToSong);
+        var mockLogger = new Mock<ILogger<Ez2DbParser>>();
+        var parser = new Ez2DbParser(mockLogger.Object);
+        var difficultyCategory = Enumeration.FromDisplayName<DifficultyCategory>(difficultyCategoryName);
+        var action = () => parser.ParseDifficultyMode(songNode, xPathToDifficultMode, difficultyCategory);
+        action.Should().Throw<ParserException>().WithMessage("Game track difficulty level cannot be zero");
     }
 }
