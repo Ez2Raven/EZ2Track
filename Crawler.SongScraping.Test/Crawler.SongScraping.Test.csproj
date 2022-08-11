@@ -32,9 +32,125 @@
     <None Update="ez2onDBSample.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="ez2onDBSample.html.txt">
+    <None Update="ez2onDBSample.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Update="appsettings.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Ez2OnWikiWiki-GameTracks-Sample.html">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Remove="Ez2OnWikiWikiSample_files\zrt_lookup.html" />
+    <None Remove="Ez2OnWikiWikiSample_files\wikiwiki-f6bacec1fb1eb8c329d9.min.js.download" />
+    <None Remove="Ez2OnWikiWikiSample_files\wikiwiki-24730a05deca5b63c1fe.min.css" />
+    <None Remove="Ez2OnWikiWikiSample_files\usync.js.download" />
+    <None Remove="Ez2OnWikiWikiSample_files\usync.html" />
+    <None Remove="Ez2OnWikiWikiSample_files\usermatch.html" />
+    <None Remove="Ez2OnWikiWikiSample_files\user_sync.html" />
+    <None Remove="Ez2OnWikiWikiSample_files\syncframe.html" />
+    <None Remove="Ez2OnWikiWikiSample_files\sync.html" />
+    <None Remove="Ez2OnWikiWikiSample_files\sync(2)" />
+    <None Remove="Ez2OnWikiWikiSample_files\sync(1)" />
+    <None Remove="Ez2OnWikiWikiSample_files\sync" />
+    <None Remove="Ez2OnWikiWikiSample_files\sodar" />
+    <None Remove="Ez2OnWikiWikiSample_files\skin-default_silver-236ded896cad7427110a.min.css" />
+    <None Remove="Ez2OnWikiWikiSample_files\saved_resource.html" />
+    <None Remove="Ez2OnWikiWikiSample_files\saved_resource(5).html" />
+    <None Remove="Ez2OnWikiWikiSample_files\saved_resource(4).html" />
+    <None Remove="Ez2OnWikiWikiSample_files\saved_resource(3)" />
+    <None Remove="Ez2OnWikiWikiSample_files\saved_resource(2)" />
+    <None Remove="Ez2OnWikiWikiSample_files\saved_resource(1)" />
+    <None Remove="Ez2OnWikiWikiSample_files\saved_resource" />
+    <None Remove="Ez2OnWikiWikiSample_files\rx_lidar.js.download" />
+    <None Remove="Ez2OnWikiWikiSample_files\rss.png" />
+    <None Remove="Ez2OnWikiWikiSample_files\rrum" />
+    <None Remove="Ez2OnWikiWikiSample_files\rename.png" />
+    <None Remove="Ez2OnWikiWikiSample_files\recentchanges.png" />
+    <None Remove="Ez2OnWikiWikiSample_files\receive" />
+    <None Remove="Ez2OnWikiWikiSample_files\pubmatic" />
+    <None Remove="Ez2OnWikiWikiSample_files\publishertag.prebid.117.js.download" />
+    <None Remove="Ez2OnWikiWikiSample_files\pubads_impl_2022081001.js.download" />
+    <None Remove="Ez2OnWikiWikiSample_files\pr.html" />
+    <None Remove="Ez2OnWikiWikiSample_files\pixel.html" />
+    <None Remove="Ez2OnWikiWikiSample_files\pixel(1)" />
+    <None Remove="Ez2OnWikiWikiSample_files\pixel" />
+    <None Remove="Ez2OnWikiWikiSample_files\paraedit.png" />
+    <None Remove="Ez2OnWikiWikiSample_files\p.js.download" />
+    <None Remove="Ez2OnWikiWikiSample_files\new.png" />
+    <None Remove="Ez2OnWikiWikiSample_files\main.min.js.download" />
+    <None Remove="Ez2OnWikiWikiSample_files\localstore.js.download" />
+    <None Remove="Ez2OnWikiWikiSample_files\list.png" />
+    <None Remove="Ez2OnWikiWikiSample_files\l" />
+    <None Remove="Ez2OnWikiWikiSample_files\js" />
+    <None Remove="Ez2OnWikiWikiSample_files\ixmatch.html" />
+    <None Remove="Ez2OnWikiWikiSample_files\iu3.html" />
+    <None Remove="Ez2OnWikiWikiSample_files\index.html" />
+    <None Remove="Ez2OnWikiWikiSample_files\img" />
+    <None Remove="Ez2OnWikiWikiSample_files\icon.png" />
+    <None Remove="Ez2OnWikiWikiSample_files\htw-pixel.gif" />
+    <None Remove="Ez2OnWikiWikiSample_files\home.png" />
+    <None Remove="Ez2OnWikiWikiSample_files\help.png" />
+    <None Remove="Ez2OnWikiWikiSample_files\gtm.js.download" />
+    <None Remove="Ez2OnWikiWikiSample_files\gpt.js.download" />
+    <None Remove="Ez2OnWikiWikiSample_files\getuid.html" />
+    <None Remove="Ez2OnWikiWikiSample_files\gen_204" />
+    <None Remove="Ez2OnWikiWikiSample_files\freeze.png" />
+    <None Remove="Ez2OnWikiWikiSample_files\flux_wikiwiki_AS_TM_AT.min.js.download" />
+    <None Remove="Ez2OnWikiWikiSample_files\file.png" />
+    <None Remove="Ez2OnWikiWikiSample_files\f.txt" />
+    <None Remove="Ez2OnWikiWikiSample_files\f(9).txt" />
+    <None Remove="Ez2OnWikiWikiSample_files\f(8).txt" />
+    <None Remove="Ez2OnWikiWikiSample_files\f(7).txt" />
+    <None Remove="Ez2OnWikiWikiSample_files\f(6).txt" />
+    <None Remove="Ez2OnWikiWikiSample_files\f(5).txt" />
+    <None Remove="Ez2OnWikiWikiSample_files\f(4).txt" />
+    <None Remove="Ez2OnWikiWikiSample_files\f(3).txt" />
+    <None Remove="Ez2OnWikiWikiSample_files\f(2).txt" />
+    <None Remove="Ez2OnWikiWikiSample_files\f(1).txt" />
+    <None Remove="Ez2OnWikiWikiSample_files\ez_head.jpg" />
+    <None Remove="Ez2OnWikiWikiSample_files\express_html_inpage_rendering_lib_200_276.js.download" />
+    <None Remove="Ez2OnWikiWikiSample_files\en.png" />
+    <None Remove="Ez2OnWikiWikiSample_files\edit.png" />
+    <None Remove="Ez2OnWikiWikiSample_files\ecm3(2)" />
+    <None Remove="Ez2OnWikiWikiSample_files\ecm3(1)" />
+    <None Remove="Ez2OnWikiWikiSample_files\ecm3" />
+    <None Remove="Ez2OnWikiWikiSample_files\diff.png" />
+    <None Remove="Ez2OnWikiWikiSample_files\dcm" />
+    <None Remove="Ez2OnWikiWikiSample_files\current" />
+    <None Remove="Ez2OnWikiWikiSample_files\css" />
+    <None Remove="Ez2OnWikiWikiSample_files\cs.html" />
+    <None Remove="Ez2OnWikiWikiSample_files\cri" />
+    <None Remove="Ez2OnWikiWikiSample_files\copy.png" />
+    <None Remove="Ez2OnWikiWikiSample_files\cookie_push_onload.html" />
+    <None Remove="Ez2OnWikiWikiSample_files\container.html" />
+    <None Remove="Ez2OnWikiWikiSample_files\container(1).html" />
+    <None Remove="Ez2OnWikiWikiSample_files\backup.png" />
+    <None Remove="Ez2OnWikiWikiSample_files\b025add43d370dbe72c8a5e34ae2045c.js.download" />
+    <None Remove="Ez2OnWikiWikiSample_files\async_usersync.html" />
+    <None Remove="Ez2OnWikiWikiSample_files\async_usersync" />
+    <None Remove="Ez2OnWikiWikiSample_files\apstag.js.download" />
+    <None Remove="Ez2OnWikiWikiSample_files\analytics.js.download" />
+    <None Remove="Ez2OnWikiWikiSample_files\amp4ads-v0.mjs" />
+    <None Remove="Ez2OnWikiWikiSample_files\amp-form-0.1.mjs" />
+    <None Remove="Ez2OnWikiWikiSample_files\amp-fit-text-0.1.mjs" />
+    <None Remove="Ez2OnWikiWikiSample_files\amp-analytics-0.1.mjs" />
+    <None Remove="Ez2OnWikiWikiSample_files\amp-ad-exit-0.1.mjs" />
+    <None Remove="Ez2OnWikiWikiSample_files\aframe.html" />
+    <None Remove="Ez2OnWikiWikiSample_files\adview(1)" />
+    <None Remove="Ez2OnWikiWikiSample_files\adview" />
+    <None Remove="Ez2OnWikiWikiSample_files\ads.html" />
+    <None Remove="Ez2OnWikiWikiSample_files\YqoADgj5ZJClc_y9zezlygAAErYAAAAB" />
+    <None Remove="Ez2OnWikiWikiSample_files\UFYwWwmt.js.download" />
+    <None Remove="Ez2OnWikiWikiSample_files\SPug" />
+    <None Remove="Ez2OnWikiWikiSample_files\PugMaster(1)" />
+    <None Remove="Ez2OnWikiWikiSample_files\PugMaster" />
+    <None Remove="Ez2OnWikiWikiSample_files\Enqz_20U.html" />
+    <None Remove="Ez2OnWikiWikiSample_files\B26943865.323468599" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Ez2OnWikiWikiSample_files" />
   </ItemGroup>
 
 </Project>

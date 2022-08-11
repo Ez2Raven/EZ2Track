@@ -1,5 +1,4 @@
 using CleanCode.Patterns.DataStructures;
-using Crawler.SongScraping.Parsers.Exceptions;
 using Crawler.SongScraping.Parsers.Ez2Db;
 using FluentAssertions;
 using Gaming.Domain.Aggregates.GameAggregate;
@@ -53,7 +52,7 @@ public class Ez2DbTest
         var mockLogger = new Mock<ILogger<Ez2DbParser>>();
         var parser = new Ez2DbParser(mockLogger.Object);
 
-        var ez2OnGameTracks = parser.Process(songNodes);
+        var ez2OnGameTracks = parser.ProcessGameTracks(url);
         ez2OnGameTracks.Count.Should().Be(numOfGameTracks);
     }
 
@@ -67,7 +66,7 @@ public class Ez2DbTest
         string album, string genre)
     {
         var doc = new HtmlDocument();
-        doc.Load("ez2onDBSample.html.txt");
+        doc.Load("ez2onDBSample.html");
         var songNode = doc.DocumentNode.SelectSingleNode(xPath);
         var mockLogger = new Mock<ILogger<Ez2DbParser>>();
         var parser = new Ez2DbParser(mockLogger.Object);
@@ -100,7 +99,7 @@ public class Ez2DbTest
         string album, string genre)
     {
         var doc = new HtmlDocument();
-        doc.Load("ez2onDBSample.html.txt");
+        doc.Load("ez2onDBSample.html");
         var songNode = doc.DocumentNode.SelectSingleNode(xPath);
         var mockLogger = new Mock<ILogger<Ez2DbParser>>();
         var parser = new Ez2DbParser(mockLogger.Object);
@@ -142,15 +141,15 @@ public class Ez2DbTest
     [InlineData("/html/body/div[@id='contentmain']/table[@id='EZ2ONContent']/tbody[@id='EZ2DJ_TRACKS']/tr[140]",
         "EZ2DJ 7TH TRAX")]
     [InlineData("/html/body/div[@id='contentmain']/table[@id='EZ2ONContent']/tbody[@id='EZ2DJ_TRACKS']/tr[182]",
-        "EZ2ON 2008")]
+        "EZ2ON Reboot: R - 2008")]
     [InlineData("/html/body/div[@id='contentmain']/table[@id='EZ2ONContent']/tbody[@id='EZ2DJ_TRACKS']/tr[196]",
-        "EZ2ON 2013")]
+        "EZ2ON Reboot: R - 2013")]
     [InlineData("/html/body/div[@id='contentmain']/table[@id='EZ2ONContent']/tbody[@id='EZ2DJ_TRACKS']/tr[207]",
-        "EZ2ON 2021")]
+        "EZ2ON Reboot: R - 2021")]
     public void Can_ParseSongNode_As_ValidGame(string xPathToEz2DjSongNode, string gameTitle)
     {
         var doc = new HtmlDocument();
-        doc.Load("ez2onDBSample.html.txt");
+        doc.Load("ez2onDBSample.html");
         var songNode = doc.DocumentNode.SelectSingleNode(xPathToEz2DjSongNode);
         var mockLogger = new Mock<ILogger<Ez2DbParser>>();
         var parser = new Ez2DbParser(mockLogger.Object);
@@ -189,7 +188,7 @@ public class Ez2DbTest
         string difficultyCategoryName)
     {
         var doc = new HtmlDocument();
-        doc.Load("ez2onDBSample.html.txt");
+        doc.Load("ez2onDBSample.html");
         var songNode = doc.DocumentNode.SelectSingleNode(xPathToSong);
         var mockLogger = new Mock<ILogger<Ez2DbParser>>();
         var parser = new Ez2DbParser(mockLogger.Object);
@@ -198,21 +197,5 @@ public class Ez2DbTest
             parser.ParseDifficultyMode(songNode, xPathToDifficultMode, difficultyCategory);
         expectedDifficultyMode.Level.Should().Be(difficultyLevel);
         expectedDifficultyMode.Category.Should().Be(difficultyCategory);
-    }
-
-    [Theory]
-    [InlineData("/html/body/div[@id='contentmain']/table[@id='EZ2ONContent']/tbody[@id='EZ2DJ_TRACKS']/tr[1]",
-        "td[8]/a", "None")]
-    public void Throws_ParserException_For_InvalidDifficultMode(string xPathToSong, string xPathToDifficultMode,
-        string difficultyCategoryName)
-    {
-        var doc = new HtmlDocument();
-        doc.Load("ez2onDBSample.html.txt");
-        var songNode = doc.DocumentNode.SelectSingleNode(xPathToSong);
-        var mockLogger = new Mock<ILogger<Ez2DbParser>>();
-        var parser = new Ez2DbParser(mockLogger.Object);
-        var difficultyCategory = Enumeration.FromDisplayName<DifficultyCategory>(difficultyCategoryName);
-        var action = () => parser.ParseDifficultyMode(songNode, xPathToDifficultMode, difficultyCategory);
-        action.Should().Throw<ParserException>().WithMessage("Game track difficulty level cannot be zero");
     }
 }

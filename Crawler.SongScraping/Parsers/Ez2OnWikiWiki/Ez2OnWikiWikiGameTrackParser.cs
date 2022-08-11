@@ -1,7 +1,6 @@
 ﻿// Licensed to the.NET Foundation under one or more agreements.
 // The.NET Foundation licenses this file to you under the MIT license.
 
-using System;
 using System.Collections.Generic;
 using Crawler.SongScraping.Parsers.Exceptions;
 using Gaming.Domain.Aggregates.GameAggregate;
@@ -24,20 +23,50 @@ public class Ez2OnWikiWikiGameTrackParser : IMusicGameParser
 
     private string XPathToAlbum { get; } = "td[1]";
     private string XPathToSongTitle { get; } = "td[2]";
-    private string XPathToEzDifficultyLevel { get; } = "td[3]";
-    private string XPathToNmDifficultyLevel { get; } = "td[4]";
-    private string XPathToHdDifficultyLevel { get; } = "td[5]";
-    private string XPathToShdDifficultyLevel { get; } = "td[6]";
+    private string XPathTo4KeysEasyLevel { get; } = "td[3]";
+    private string XPathTo4KeysNormalLevel { get; } = "td[4]";
+    private string XPathTo4KeysHardLevel { get; } = "td[5]";
+    private string XPathTo4KeysShdLevel { get; } = "td[6]";
+    private string XPathTo5KeysEasyLevel { get; } = "td[7]";
+    private string XPathTo5KeysNormalLevel { get; } = "td[8]";
+    private string XPathTo5KeysHardLevel { get; } = "td[9]";
+    private string XPathTo5KeysShdLevel { get; } = "td[10]";
+    private string XPathTo6KeysEasyLevel { get; } = "td[11]";
+    private string XPathTo6KeysNormalLevel { get; } = "td[12]";
+    private string XPathTo6KeysHardLevel { get; } = "td[13]";
+    private string XPathTo6KeysShdLevel { get; } = "td[14]";
+    private string XPathTo8KeysEasyLevel { get; } = "td[15]";
+    private string XPathTo8KeysNormalLevel { get; } = "td[16]";
+    private string XPathTo8KeysHardLevel { get; } = "td[17]";
+    private string XPathTo8KeysShdLevel { get; } = "td[18]";
 
-    public List<IGameTrack> Process(HtmlNodeCollection rowsOfSongNodes)
+    public List<IGameTrack> Process()
     {
+        var url = "https://wikiwiki.jp/ez2on/LevelList/List";
+        return ProcessGameTracks(url);
+    }
+
+    public List<IGameTrack> ProcessGameTracks(string url)
+    {
+        var web1 = new HtmlWeb();
+        var loadUrlTask = web1.LoadFromWebAsync(url);
+        var htmlDoc = loadUrlTask.Result;
+        var xpath =
+            "//*[@id=\"content\"]/h2[contains(text(), '難易度表 (STANDARD)')]/following-sibling::div/div/table/tbody/tr";
+        var songNodes = htmlDoc.DocumentNode.SelectNodes(xpath);
+
         var ez2OnGameTracks = new List<IGameTrack>();
-        foreach (var songNode in rowsOfSongNodes)
+        foreach (var songNode in songNodes)
         {
             ez2OnGameTracks.AddRange(ParseGameTracksFromSongNode(songNode));
         }
 
         return ez2OnGameTracks;
+    }
+
+    public List<ISong> ProcessSongs(string url)
+    {
+        return new List<ISong>();
     }
 
     /// <summary>
@@ -48,14 +77,14 @@ public class Ez2OnWikiWikiGameTrackParser : IMusicGameParser
     /// <exception cref="ParserException"></exception>
     public Game ParseGameInfo(HtmlNode songNode)
     {
-        var album = songNode.SelectSingleNode(XPathToAlbum).InnerText.Trim();
+        var album = songNode.SelectSingleNode(XPathToAlbum)?.InnerText.Trim();
         Game ez2djGame;
-        switch (album.ToUpper())
+        switch (album?.ToUpper())
         {
-            case "1ST TRACKS":
+            case "1ST":
                 ez2djGame = new Game {Title = Ez2OnReleaseTitle.FirstTrax.Name, IsDlc = false};
                 break;
-            case "2ND TRAX":
+            case "2ND":
                 ez2djGame = new Game {Title = Ez2OnReleaseTitle.SecondTrax.Name, IsDlc = false};
                 break;
             case "3RD":
@@ -94,7 +123,7 @@ public class Ez2OnWikiWikiGameTrackParser : IMusicGameParser
             case "PP":
                 ez2djGame = new Game {Title = Ez2OnReleaseTitle.PrestigePass.Name, IsDlc = true};
                 break;
-            case "02":
+            case "O2":
                 ez2djGame = new Game {Title = Ez2OnReleaseTitle.O2Jam.Name, IsDlc = true};
                 break;
             default:
@@ -105,46 +134,81 @@ public class Ez2OnWikiWikiGameTrackParser : IMusicGameParser
     }
 
     public DifficultyMode ParseDifficultyMode(HtmlNode songNode, string xPathToDifficultyLevel,
-        DifficultyCategory category)
+        DifficultyCategory category, Ez2OnKeyModes keyMode)
     {
-        throw new NotImplementedException();
+        var isValidNode = int.TryParse(songNode.SelectSingleNode(xPathToDifficultyLevel)?.InnerText, out var level);
+        return isValidNode
+            ? new DifficultyMode {Level = level, Category = category, KeyMode = keyMode}
+            : throw new ParserException();
     }
 
-    public Song ParseSongInfo(HtmlNode songNode)
+    public Song ParseSongInfo(HtmlNode songNode, string gameTitle = "")
     {
-        var song = new Song {Title = songNode.SelectSingleNode(XPathToSongTitle).FirstChild.InnerText.Trim()};
+        var title = songNode.SelectSingleNode(XPathToSongTitle) == null
+            ? string.Empty
+            : songNode.SelectSingleNode(XPathToSongTitle).FirstChild.InnerText.Trim();
 
-        return song;
+        var album = string.IsNullOrWhiteSpace(gameTitle)
+            ? songNode.SelectSingleNode(XPathToAlbum) == null
+                ? string.Empty
+                : songNode.SelectSingleNode(XPathToAlbum).FirstChild.InnerText.Trim()
+            : gameTitle;
+
+
+        return new Song {Title = title, Album = album};
     }
 
     private IEnumerable<GameTrack> ParseGameTracksFromSongNode(HtmlNode songNode)
     {
-        var ganeTracks = new List<GameTrack>();
+        var gameTracks = new List<GameTrack>();
         try
         {
             var game = ParseGameInfo(songNode);
             var song = ParseSongInfo(songNode);
-            song.Album = game.Title;
 
-            var ezMode =
-                ParseDifficultyMode(songNode, XPathToEzDifficultyLevel, DifficultyCategory.Easy);
-
-            ganeTracks.Add(new GameTrack(song, game, ezMode));
-
-            var nmMode =
-                ParseDifficultyMode(songNode, XPathToNmDifficultyLevel, DifficultyCategory.Normal);
-
-            ganeTracks.Add(new GameTrack(song, game, nmMode));
-
-            var hdMode =
-                ParseDifficultyMode(songNode, XPathToHdDifficultyLevel, DifficultyCategory.Hard);
-
-            ganeTracks.Add(new GameTrack(song, game, hdMode));
-
-            var shdMode =
-                ParseDifficultyMode(songNode, XPathToShdDifficultyLevel, DifficultyCategory.SuperHard);
-
-            ganeTracks.Add(new GameTrack(song, game, shdMode));
+            gameTracks.Add(new GameTrack(song, game,
+                ParseDifficultyMode(songNode, XPathTo4KeysEasyLevel, DifficultyCategory.Easy, Ez2OnKeyModes.FourKeys)));
+            gameTracks.Add(new GameTrack(song, game,
+                ParseDifficultyMode(songNode, XPathTo4KeysNormalLevel, DifficultyCategory.Normal,
+                    Ez2OnKeyModes.FourKeys)));
+            gameTracks.Add(new GameTrack(song, game,
+                ParseDifficultyMode(songNode, XPathTo4KeysHardLevel, DifficultyCategory.Hard, Ez2OnKeyModes.FourKeys)));
+            gameTracks.Add(new GameTrack(song, game,
+                ParseDifficultyMode(songNode, XPathTo4KeysShdLevel, DifficultyCategory.SuperHard,
+                    Ez2OnKeyModes.FourKeys)));
+            gameTracks.Add(new GameTrack(song, game,
+                ParseDifficultyMode(songNode, XPathTo5KeysEasyLevel, DifficultyCategory.Easy, Ez2OnKeyModes.FiveKeys)));
+            gameTracks.Add(new GameTrack(song, game,
+                ParseDifficultyMode(songNode, XPathTo5KeysNormalLevel, DifficultyCategory.Normal,
+                    Ez2OnKeyModes.FiveKeys)));
+            gameTracks.Add(new GameTrack(song, game,
+                ParseDifficultyMode(songNode, XPathTo5KeysHardLevel, DifficultyCategory.Hard, Ez2OnKeyModes.SixKeys)));
+            gameTracks.Add(new GameTrack(song, game,
+                ParseDifficultyMode(songNode, XPathTo5KeysShdLevel, DifficultyCategory.SuperHard,
+                    Ez2OnKeyModes.FiveKeys)));
+            gameTracks.Add(new GameTrack(song, game,
+                ParseDifficultyMode(songNode, XPathTo6KeysEasyLevel, DifficultyCategory.Easy, Ez2OnKeyModes.SixKeys)));
+            gameTracks.Add(new GameTrack(song, game,
+                ParseDifficultyMode(songNode, XPathTo6KeysNormalLevel, DifficultyCategory.Normal,
+                    Ez2OnKeyModes.FiveKeys)));
+            gameTracks.Add(new GameTrack(song, game,
+                ParseDifficultyMode(songNode, XPathTo6KeysHardLevel, DifficultyCategory.Hard,
+                    Ez2OnKeyModes.EightKeys)));
+            gameTracks.Add(new GameTrack(song, game,
+                ParseDifficultyMode(songNode, XPathTo6KeysShdLevel, DifficultyCategory.SuperHard,
+                    Ez2OnKeyModes.SixKeys)));
+            gameTracks.Add(new GameTrack(song, game,
+                ParseDifficultyMode(songNode, XPathTo8KeysEasyLevel, DifficultyCategory.Easy,
+                    Ez2OnKeyModes.EightKeys)));
+            gameTracks.Add(new GameTrack(song, game,
+                ParseDifficultyMode(songNode, XPathTo8KeysNormalLevel, DifficultyCategory.Normal,
+                    Ez2OnKeyModes.FiveKeys)));
+            gameTracks.Add(new GameTrack(song, game,
+                ParseDifficultyMode(songNode, XPathTo8KeysHardLevel, DifficultyCategory.Hard,
+                    Ez2OnKeyModes.EightKeys)));
+            gameTracks.Add(new GameTrack(song, game,
+                ParseDifficultyMode(songNode, XPathTo8KeysShdLevel, DifficultyCategory.SuperHard,
+                    Ez2OnKeyModes.EightKeys)));
         }
         catch (ParserException parserException)
         {
@@ -152,6 +216,6 @@ public class Ez2OnWikiWikiGameTrackParser : IMusicGameParser
             _logger.LogTrace(parserException, "HTML Element: {html}", songNode.WriteTo());
         }
 
-        return ganeTracks;
+        return gameTracks;
     }
 }

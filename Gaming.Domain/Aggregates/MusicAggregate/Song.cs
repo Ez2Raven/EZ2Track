@@ -2,7 +2,16 @@
 
 namespace Gaming.Domain.Aggregates.MusicAggregate;
 
-public class Song : Entity
+public interface ISong
+{
+    string Title { get; set; }
+    string Composer { get; set; }
+    string Album { get; set; }
+    string Genre { get; set; }
+    string Bpm { get; set; }
+}
+
+public class Song : Entity, ISong
 {
     public Song()
     {

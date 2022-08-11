@@ -29,13 +29,41 @@ public class Ez2DbParser : IMusicGameParser
     private string XPathToShdDifficultyLevel { get; } = "td[8]/a";
     private string XPathToSongBpm { get; } = "td[9]";
 
-
-    public List<IGameTrack> Process(HtmlNodeCollection rowsOfSongNodes)
+    public List<IGameTrack> Process()
     {
+        var url = "https://ez2on.co.kr/6K/?mode=database&pagelist=218";
+        return ProcessGameTracks(url);
+    }
+
+    public List<IGameTrack> ProcessGameTracks(string url)
+    {
+        var web1 = new HtmlWeb();
+        var loadUrlTask = web1.LoadFromWebAsync(url);
+        var htmlDoc = loadUrlTask.Result;
+        var xpath = "/html/body/div[@id='contentmain']/table[@id='EZ2ONContent']/tbody[@id='EZ2DJ_TRACKS']/tr";
+        var songNodes = htmlDoc.DocumentNode.SelectNodes(xpath);
+
         var ez2OnGameTracks = new List<IGameTrack>();
-        foreach (var songNode in rowsOfSongNodes)
+        foreach (var songNode in songNodes)
         {
             ez2OnGameTracks.AddRange(ParseGameTracksFromSingleSong(songNode));
+        }
+
+        return ez2OnGameTracks;
+    }
+
+    public List<ISong> ProcessSongs(string url)
+    {
+        var web1 = new HtmlWeb();
+        var loadUrlTask = web1.LoadFromWebAsync(url);
+        var htmlDoc = loadUrlTask.Result;
+        var xpath = "/html/body/div[@id='contentmain']/table[@id='EZ2ONContent']/tbody[@id='EZ2DJ_TRACKS']/tr";
+        var songNodes = htmlDoc.DocumentNode.SelectNodes(xpath);
+
+        var ez2OnGameTracks = new List<ISong>();
+        foreach (var songNode in songNodes)
+        {
+            ez2OnGameTracks.Add(ParseSongInfo(songNode));
         }
 
         return ez2OnGameTracks;
@@ -99,14 +127,16 @@ public class Ez2DbParser : IMusicGameParser
         return difficultyMode;
     }
 
-    public Song ParseSongInfo(HtmlNode songNode)
+    public Song ParseSongInfo(HtmlNode songNode, string gameTitle = "")
     {
         var remixNode = songNode.SelectSingleNode(XPathToSongRemixTag);
         var remix = remixNode?.InnerText.Trim();
 
         var song = new Song
         {
-            Album = songNode.SelectSingleNode(XPathToAlbum).FirstChild.InnerText.Trim(),
+            Album = string.IsNullOrWhiteSpace(gameTitle)
+                ? songNode.SelectSingleNode(XPathToAlbum).FirstChild.InnerText.Trim()
+                : gameTitle,
             Title = remix == null
                 ? songNode.SelectSingleNode(XPathToSongTitle).FirstChild.InnerText.Trim()
                 : songNode.SelectSingleNode(XPathToSongTitle).FirstChild.InnerText.Trim() + $" {remix}",
