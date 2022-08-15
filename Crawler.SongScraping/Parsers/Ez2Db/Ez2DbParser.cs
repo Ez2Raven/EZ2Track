@@ -29,13 +29,13 @@ public class Ez2DbParser : IMusicGameParser
     private string XPathToShdDifficultyLevel { get; } = "td[8]/a";
     private string XPathToSongBpm { get; } = "td[9]";
 
-    public List<IGameTrack> Process()
+    public IList<IGameTrack> Process()
     {
         var url = "https://ez2on.co.kr/6K/?mode=database&pagelist=218";
         return ProcessGameTracks(url);
     }
 
-    public List<IGameTrack> ProcessGameTracks(string url)
+    public IList<IGameTrack> ProcessGameTracks(string url)
     {
         var web1 = new HtmlWeb();
         var loadUrlTask = web1.LoadFromWebAsync(url);
@@ -52,7 +52,7 @@ public class Ez2DbParser : IMusicGameParser
         return ez2OnGameTracks;
     }
 
-    public List<ISong> ProcessSongs(string url)
+    public IList<ISong> ProcessSongs(string url)
     {
         var web1 = new HtmlWeb();
         var loadUrlTask = web1.LoadFromWebAsync(url);

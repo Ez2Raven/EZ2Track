@@ -45,6 +45,20 @@ public class Ez2OnWikiWikiTest
         ez2OnGameTracks.Count.Should().BeGreaterThan(0);
     }
 
+    [Fact]
+    public void CanParseSongListUrlAsSongs()
+    {
+        var url = "https://wikiwiki.jp/ez2on/SongList/List";
+        var mockLogger = new Mock<ILogger<Ez2OnWikiWikiGameTrackParser>>();
+        var parser = new Ez2OnWikiWikiGameTrackParser(mockLogger.Object);
+        var songList = parser.ProcessSongs(url);
+        songList.Count.Should().BeGreaterThan(0);
+        foreach (var song in songList)
+        {
+            _output.WriteLine(song.ToString());
+        }
+    }
+
 
     [Theory]
     [InlineData(
@@ -62,7 +76,7 @@ public class Ez2OnWikiWikiTest
         var mockLogger = new Mock<ILogger<Ez2OnWikiWikiGameTrackParser>>();
         var parser = new Ez2OnWikiWikiGameTrackParser(mockLogger.Object);
         // ez2onWikiWiki song album is inferred from game title
-        var actualSong = parser.ParseSongInfo(songNode, album);
+        var actualSong = parser.ParseSongInfoFromGameTrack(songNode, album);
         Assert.Equal(album, actualSong.Album);
         Assert.Equal(songTitle, actualSong.Title);
         Assert.Equal(composer, actualSong.Composer);

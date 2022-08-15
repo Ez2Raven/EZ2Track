@@ -22,13 +22,13 @@ public class Song : Entity, ISong
         Bpm = string.Empty;
     }
 
-    public Song(Song songDetails, string title, string composer, string album, string genre, string bpm)
+    public Song(string title, string composer, string album, string genre, string bpm)
     {
-        Title = songDetails.Title;
-        Album = songDetails.Album;
-        Composer = songDetails.Composer;
-        Genre = songDetails.Genre;
-        Bpm = songDetails.Bpm;
+        Title = title;
+        Composer = composer;
+        Album = album;
+        Genre = genre;
+        Bpm = bpm;
     }
 
     public string Title { get; set; }
@@ -37,6 +37,7 @@ public class Song : Entity, ISong
 
     public string Genre { get; set; }
     public string Bpm { get; set; }
+
 
     public override string ToString()
     {

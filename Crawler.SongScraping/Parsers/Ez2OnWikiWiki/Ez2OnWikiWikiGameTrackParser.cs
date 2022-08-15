@@ -40,13 +40,20 @@ public class Ez2OnWikiWikiGameTrackParser : IMusicGameParser
     private string XPathTo8KeysHardLevel { get; } = "td[17]";
     private string XPathTo8KeysShdLevel { get; } = "td[18]";
 
-    public List<IGameTrack> Process()
+    public string XPathToSongTitleV2 { get; set; } = "td[1]";
+    public string XPathToComposer { get; set; } = "td[2]";
+
+    public string XPathToBpm { get; set; } = "td[3]";
+
+    public string XPathToGenre { get; set; } = "td[5]";
+
+    public IList<IGameTrack> Process()
     {
         var url = "https://wikiwiki.jp/ez2on/LevelList/List";
         return ProcessGameTracks(url);
     }
 
-    public List<IGameTrack> ProcessGameTracks(string url)
+    public IList<IGameTrack> ProcessGameTracks(string url)
     {
         var web1 = new HtmlWeb();
         var loadUrlTask = web1.LoadFromWebAsync(url);
@@ -64,10 +71,43 @@ public class Ez2OnWikiWikiGameTrackParser : IMusicGameParser
         return ez2OnGameTracks;
     }
 
-    public List<ISong> ProcessSongs(string url)
+    public IList<ISong> ProcessSongs(string url)
     {
-        return new List<ISong>();
+        var web1 = new HtmlWeb();
+        var loadUrlTask = web1.LoadFromWebAsync(url);
+        var htmlDoc = loadUrlTask.Result;
+        var xpath =
+            "//*[@id=\"content\"]/div/h3";
+        var albumNodes = htmlDoc.DocumentNode.SelectNodes(xpath);
+        var songList = ParseSongInfoFromSongListUrl(albumNodes);
+        return songList;
     }
+
+    private IList<ISong> ParseSongInfoFromSongListUrl(HtmlNodeCollection albumNodes)
+    {
+        var songList = new List<ISong>();
+        foreach (var albumNode in albumNodes)
+        {
+            var album = albumNode.InnerText.Trim();
+            var songNodes = albumNode.SelectNodes("following-sibling::div[1]/table/tbody/tr");
+            if (songNodes == null)
+            {
+                throw new ParserException("unable to recognise song nodes from song list page");
+            }
+
+            foreach (var songNode in songNodes)
+            {
+                var title = songNode.SelectSingleNode(XPathToSongTitleV2)?.InnerText.Trim() ?? string.Empty;
+                var composer = songNode.SelectSingleNode(XPathToComposer)?.InnerText.Trim() ?? string.Empty;
+                var genre = songNode.SelectSingleNode(XPathToGenre)?.InnerText.Trim() ?? string.Empty;
+                var bpm = songNode.SelectSingleNode(XPathToBpm)?.InnerText.Trim() ?? string.Empty;
+                songList.Add(new Song(title, composer, album, genre, bpm));
+            }
+        }
+
+        return songList;
+    }
+
 
     /// <summary>
     ///     Throws exception if the Game Release cannot be determined
@@ -142,7 +182,7 @@ public class Ez2OnWikiWikiGameTrackParser : IMusicGameParser
             : throw new ParserException();
     }
 
-    public Song ParseSongInfo(HtmlNode songNode, string gameTitle = "")
+    public Song ParseSongInfoFromGameTrack(HtmlNode songNode, string gameTitle = "")
     {
         var title = songNode.SelectSingleNode(XPathToSongTitle) == null
             ? string.Empty
@@ -164,7 +204,7 @@ public class Ez2OnWikiWikiGameTrackParser : IMusicGameParser
         try
         {
             var game = ParseGameInfo(songNode);
-            var song = ParseSongInfo(songNode);
+            var song = ParseSongInfoFromGameTrack(songNode);
 
             gameTracks.Add(new GameTrack(song, game,
                 ParseDifficultyMode(songNode, XPathTo4KeysEasyLevel, DifficultyCategory.Easy, Ez2OnKeyModes.FourKeys)));

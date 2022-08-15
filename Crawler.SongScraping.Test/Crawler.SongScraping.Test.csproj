@@ -149,8 +149,4 @@
     <None Remove="Ez2OnWikiWikiSample_files\B26943865.323468599" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Ez2OnWikiWikiSample_files" />
-  </ItemGroup>
-
 </Project>

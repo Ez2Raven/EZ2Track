@@ -9,7 +9,7 @@ namespace Crawler.SongScraping.Parsers;
 
 public interface IMusicGameParser
 {
-    List<IGameTrack> Process();
-    List<IGameTrack> ProcessGameTracks(string url);
-    List<ISong> ProcessSongs(string url);
+    IList<IGameTrack> Process();
+    IList<IGameTrack> ProcessGameTracks(string url);
+    IList<ISong> ProcessSongs(string url);
 }
