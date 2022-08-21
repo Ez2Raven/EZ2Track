@@ -1,0 +1,9 @@
+﻿version: "3.3"
+services:
+  diagrams:
+    image: ez2raven/diagrams:latest
+    command: /bin/bash
+    container_name: diagrams
+    volumes:
+      - ./src:/src
+      - ../docs/assets/images:/output
