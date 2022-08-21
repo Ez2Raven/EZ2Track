@@ -2,7 +2,7 @@
 
 namespace Gaming.Domain.Aggregates.MusicAggregate;
 
-public class SongValidator : AbstractValidator<Song>
+public class SongValidator : AbstractValidator<ISong>
 {
     public SongValidator()
     {

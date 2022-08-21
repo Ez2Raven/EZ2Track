@@ -2,6 +2,7 @@
 using Bogus;
 using Gaming.Domain.Aggregates.GameAggregate;
 using Gaming.Domain.Aggregates.GameTrackAggregate;
+using Gaming.Domain.Aggregates.GameTrackAggregate.Ez2on;
 using Gaming.Domain.Aggregates.MusicAggregate;
 using Xunit;
 using Xunit.Abstractions;
@@ -22,7 +23,7 @@ public class GamePlayListTest
     [Fact]
     public void Validate_GamePlayList_ReturnsTrue()
     {
-        var playlist = new Playlist<GameTrack>();
+        var playlist = new Playlist<Ez2OnGameTrack>();
         for (var count = 0; count < 10; count++)
         {
             var fakeSong = new Song
@@ -39,9 +40,9 @@ public class GamePlayListTest
                 Id = _randomFluent.Random.Int()
             };
 
-            var fakeMode = new DifficultyMode();
+            var fakeMode = new Ez2OnDifficultyMode();
 
-            playlist.Songs.Add(new GameTrack(fakeSong, fakeGame, fakeMode));
+            playlist.Songs.Add(new Ez2OnGameTrack(fakeSong, fakeGame, fakeMode));
         }
 
         playlist.Name = _randomFluent.Hacker.Phrase();
@@ -64,7 +65,7 @@ public class GamePlayListTest
     [Fact]
     public void Assign_DefaultDateTimeCreated_To_GamePlayList_ReturnsFalse()
     {
-        var playlist = new Playlist<GameTrack>();
+        var playlist = new Playlist<Ez2OnGameTrack>();
         for (var count = 0; count < 10; count++)
         {
             var fakeSong = new Song
@@ -81,9 +82,9 @@ public class GamePlayListTest
                 Id = _randomFluent.Random.Int()
             };
 
-            var fakeMode = new DifficultyMode();
+            var fakeMode = new Ez2OnDifficultyMode();
 
-            playlist.Songs.Add(new GameTrack(fakeSong, fakeGame, fakeMode));
+            playlist.Songs.Add(new Ez2OnGameTrack(fakeSong, fakeGame, fakeMode));
         }
 
         playlist.Name = _randomFluent.Hacker.Phrase();
@@ -105,7 +106,7 @@ public class GamePlayListTest
     [Fact]
     public void Assign_DefaultDateTimeModified_To_GamePlayList_ReturnsFalse()
     {
-        var playlist = new Playlist<GameTrack>();
+        var playlist = new Playlist<Ez2OnGameTrack>();
         for (var count = 0; count < 10; count++)
         {
             var fakeSong = new Song
@@ -122,9 +123,9 @@ public class GamePlayListTest
                 Id = _randomFluent.Random.Int()
             };
 
-            var fakeMode = new DifficultyMode();
+            var fakeMode = new Ez2OnDifficultyMode();
 
-            playlist.Songs.Add(new GameTrack(fakeSong, fakeGame, fakeMode));
+            playlist.Songs.Add(new Ez2OnGameTrack(fakeSong, fakeGame, fakeMode));
         }
 
         playlist.Name = _randomFluent.Hacker.Phrase();

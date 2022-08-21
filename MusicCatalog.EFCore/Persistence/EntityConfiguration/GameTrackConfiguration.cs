@@ -1,15 +1,15 @@
 ﻿using Gaming.Domain.Aggregates.GameAggregate;
-using Gaming.Domain.Aggregates.GameTrackAggregate;
+using Gaming.Domain.Aggregates.GameTrackAggregate.Ez2on;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace MusicCatalog.EFCore.Persistence.EntityConfiguration;
 
-public sealed class GameTrackConfiguration : SeedWorkTptConfiguration<GameTrack>
+public sealed class GameTrackConfiguration : SeedWorkTptConfiguration<Ez2OnGameTrack>
 {
-    public override void Configure(EntityTypeBuilder<GameTrack> builder)
+    public override void Configure(EntityTypeBuilder<Ez2OnGameTrack> builder)
     {
         builder
-            .HasOne<Game>(track => track.Game)
+            .HasOne(track => track.Game)
             .WithMany()
             .HasForeignKey(track => track.GameId);
 

@@ -2,7 +2,7 @@
 
 namespace Gaming.Domain.Aggregates.GameAggregate;
 
-public class GameValidator : AbstractValidator<Game>
+public class GameValidator : AbstractValidator<IGame>
 {
     public GameValidator()
     {

@@ -8,9 +8,9 @@ namespace Gaming.Domain.Aggregates.GameTrackAggregate;
 
 public interface IGameTrack
 {
-    Game Game { get; set; }
-    Song Song { get; set; }
-    DifficultyMode DifficultyMode { get; set; }
+    IGame Game { get; set; }
+    ISong Song { get; set; }
+    IDifficultyMode DifficultyMode { get; set; }
     string ThumbnailUrl { get; set; }
     string VisualizedBy { get; set; }
     string ToString();

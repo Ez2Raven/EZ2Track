@@ -3,7 +3,7 @@
 
 using CleanCode.Patterns.DataStructures;
 
-namespace Gaming.Domain.Ez2on;
+namespace Gaming.Domain.Aggregates.GameAggregate.Ez2on;
 
 public class Ez2OnReleaseTitle : Enumeration
 {

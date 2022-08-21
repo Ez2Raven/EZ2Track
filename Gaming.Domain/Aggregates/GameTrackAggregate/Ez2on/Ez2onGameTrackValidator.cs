@@ -3,9 +3,9 @@ using FluentValidation;
 using Gaming.Domain.Aggregates.GameAggregate;
 using Gaming.Domain.Aggregates.MusicAggregate;
 
-namespace Gaming.Domain.Aggregates.GameTrackAggregate;
+namespace Gaming.Domain.Aggregates.GameTrackAggregate.Ez2on;
 
-public class GameTrackValidator : AbstractValidator<GameTrack>
+public class GameTrackValidator : AbstractValidator<Ez2OnGameTrack>
 {
     private readonly GameValidator _gameValidator;
     private readonly SongValidator _songValidator;
@@ -20,13 +20,13 @@ public class GameTrackValidator : AbstractValidator<GameTrack>
         RuleFor(x => x.DifficultyMode.Level).NotEqual(0);
     }
 
-    private bool BeAValidSong(Song song)
+    private bool BeAValidSong(ISong song)
     {
         var validateResults = _songValidator.Validate(song);
         return validateResults.IsValid;
     }
 
-    private bool BeAValidGame(Game game)
+    private bool BeAValidGame(IGame game)
     {
         var validateResults = _gameValidator.Validate(game);
         return validateResults.IsValid;
