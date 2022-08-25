@@ -1,6 +1,7 @@
 ﻿using Bogus;
 using Gaming.Domain.Aggregates.GameAggregate;
 using Gaming.Domain.Aggregates.GameTrackAggregate;
+using Gaming.Domain.Aggregates.GameTrackAggregate.Ez2on;
 using Gaming.Domain.Aggregates.MusicAggregate;
 using Xunit;
 using Xunit.Abstractions;
@@ -40,11 +41,11 @@ public class GameTrackValidatorTest
             Album = _randomFluent.Lorem.Letter()
         };
         var randomFluent = new Faker {Random = new Randomizer(1080)};
-        var fakeMode = new DifficultyMode();
+        var fakeMode = new Ez2OnDifficultyMode();
         fakeMode.Level = randomFluent.Random.Int(1, 20);
         fakeMode.Category = DifficultyCategory.Easy;
 
-        var fakeGameTrack = new GameTrack(fakeSong, fakeGame, fakeMode);
+        var fakeGameTrack = new Ez2OnGameTrack(fakeSong, fakeGame, fakeMode);
 
         var fakeSongValidator = new SongValidator();
 

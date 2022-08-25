@@ -1,9 +1,10 @@
 ﻿using System;
 using FluentValidation;
+using Gaming.Domain.Aggregates.GameTrackAggregate.Ez2on;
 
 namespace Gaming.Domain.Aggregates.GameTrackAggregate;
 
-public class GameTrackPlaylistValidator : AbstractValidator<Playlist<GameTrack>>
+public class GameTrackPlaylistValidator : AbstractValidator<Playlist<Ez2OnGameTrack>>
 {
     public const string DateTimeCreatedErrorMessage = "Please provide a non-default DateTimeCreated";
     public const string DateTimeModifiedErrorMessage = "Please provide a non-default DateTimeModified";

@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
-using Crawler.SongScraping.Parsers;
 using Gaming.Domain.Aggregates.GameAggregate;
 using Gaming.Domain.Aggregates.GameTrackAggregate;
+using Gaming.Domain.Aggregates.GameTrackAggregate.Ez2on;
 using Gaming.Domain.Aggregates.MusicAggregate;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -55,13 +55,10 @@ public class TestSeeder : ISeeding
             var firstGameTrack = _gameContext.GameTracks.FirstOrDefault(gt => gt.Id == 1);
             if (firstGameTrack == null)
             {
-                firstGameTrack = new Ez2DbGameTrack(
+                firstGameTrack = new Ez2OnGameTrack(
                     firstSong,
                     firstGame,
-                    new DifficultyMode {Category = DifficultyCategory.SuperHard, Level = 20})
-                {
-                    Ez2OnDbSequenceNumber = 1, UniversalId = Guid.NewGuid(), SongId = firstSong.Id
-                };
+                    new Ez2OnDifficultyMode {Category = DifficultyCategory.SuperHard, Level = 20});
 
                 _gameContext.GameTracks.Add(firstGameTrack);
             }

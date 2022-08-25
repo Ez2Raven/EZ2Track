@@ -2,7 +2,9 @@
 
 namespace Gaming.Domain.Aggregates.GameAggregate;
 
-public class Game : Entity
+
+
+public class Game : Entity, IGame
 {
     public string Title { get; set; } = string.Empty;
     public bool IsDlc { get; set; }

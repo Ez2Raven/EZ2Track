@@ -14,6 +14,7 @@
 root = true
 
 [*]
+indent_style = space
 charset = utf-8
 trim_trailing_whitespace = true
 
@@ -23,7 +24,6 @@ indent_style = space
 indent_size = 4
 
 [*.cs]
-indent_style = space
 indent_size = 4
 dotnet_sort_system_directives_first = true
 insert_final_newline = true
@@ -269,8 +269,8 @@ dotnet_diagnostic.IDE0060.severity = warning
 dotnet_diagnostic.IDE0062.severity = warning
 
 # IDE0073: File header
-dotnet_diagnostic.IDE0073.severity = warning
-file_header_template = Licensed to the.NET Foundation under one or more agreements.\nThe.NET Foundation licenses this file to you under the MIT license.
+# dotnet_diagnostic.IDE0073.severity = warning
+# file_header_template =
 
 # IDE0161: Convert to file-scoped namespace
 dotnet_diagnostic.IDE0161.severity = warning

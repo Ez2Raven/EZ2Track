@@ -2,11 +2,11 @@
 using Gaming.Domain.Aggregates.MusicAggregate;
 using Gaming.Domain.SeedWork;
 
-namespace Gaming.Domain.Aggregates.GameTrackAggregate;
+namespace Gaming.Domain.Aggregates.GameTrackAggregate.Ez2on;
 
-public class GameTrack : Entity, IAggregateRoot
+public class Ez2OnGameTrack : Entity, IAggregateRoot, IGameTrack
 {
-    public GameTrack(Song song, Game game, DifficultyMode difficultyMode)
+    public Ez2OnGameTrack(Song song, Game game, Ez2OnDifficultyMode difficultyMode)
     {
         Song = song;
         DifficultyMode = difficultyMode;
@@ -15,24 +15,24 @@ public class GameTrack : Entity, IAggregateRoot
         VisualizedBy = string.Empty;
     }
 
-    public GameTrack()
+    public Ez2OnGameTrack()
     {
         Song = new Song();
         Game = new Game();
-        DifficultyMode = new DifficultyMode();
+        DifficultyMode = new Ez2OnDifficultyMode();
         ThumbnailUrl = string.Empty;
         VisualizedBy = string.Empty;
     }
 
     public int GameId { get; set; }
+    public int SongId { get; set; }
 
-    public Game Game { get; set; }
-    public Song Song { get; set; }
+    public IGame Game { get; set; }
+    public ISong Song { get; set; }
 
-    public DifficultyMode DifficultyMode { get; set; }
+    public IDifficultyMode DifficultyMode { get; set; }
     public string ThumbnailUrl { get; set; }
     public string VisualizedBy { get; set; }
-    public int SongId { get; set; }
 
     public override string ToString()
     {
