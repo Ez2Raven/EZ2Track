@@ -1,0 +1,12 @@
+﻿version: "3.3"
+services:
+  eztrackdoc:
+    image: jekyll/jekyll
+    command: jekyll serve
+    container_name: jekyll-ez2track
+    volumes:
+      - .:/srv/jekyll
+    ports:
+      - "4000:4000"
+    environment:
+      PAGES_REPO_NWO: "Ez2Raven/EZ2Track"
