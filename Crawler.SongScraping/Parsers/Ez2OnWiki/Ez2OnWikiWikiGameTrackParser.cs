@@ -12,7 +12,7 @@ using Gaming.Domain.Aggregates.MusicAggregate;
 using HtmlAgilityPack;
 using Microsoft.Extensions.Logging;
 
-namespace Crawler.SongScraping.Parsers.Ez2OnWikiWiki;
+namespace Crawler.SongScraping.Parsers.Ez2OnWiki;
 
 public class Ez2OnWikiWikiGameTrackParser : IRhythmGameParser
 {

@@ -1,5 +1,5 @@
 using CleanCode.Patterns.DataStructures;
-using Crawler.SongScraping.Parsers.Ez2OnWikiWiki;
+using Crawler.SongScraping.Parsers.Ez2OnWiki;
 using FluentAssertions;
 using Gaming.Domain.Aggregates.GameAggregate;
 using Gaming.Domain.Aggregates.GameTrackAggregate;
