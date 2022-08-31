@@ -1,10 +1,4 @@
-﻿using System;
-using System.Linq;
-using Gaming.Domain.Aggregates.GameAggregate;
-using Gaming.Domain.Aggregates.GameTrackAggregate;
-using Gaming.Domain.Aggregates.GameTrackAggregate.Ez2on;
-using Gaming.Domain.Aggregates.MusicAggregate;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using MusicCatalog.EFCore.Persistence;
 
@@ -28,40 +22,6 @@ public class TestSeeder : ISeeding
         {
             // apply migration during startup for easy development
             _gameContext.Database.Migrate();
-
-            var firstGame = _gameContext.Games.FirstOrDefault(b => b.Title == "First Game");
-            if (firstGame == null)
-            {
-                firstGame = new Game {Title = "First Game", IsDlc = false, UniversalId = Guid.NewGuid()};
-
-                _gameContext.Games.Add(firstGame);
-            }
-
-            var firstSong = _gameContext.Songs.FirstOrDefault(s => s.Title == "First Song");
-            if (firstSong == null)
-            {
-                firstSong = new Song
-                {
-                    Title = "First Song",
-                    Album = "First Album",
-                    Bpm = "90 ~ 120",
-                    Composer = "First Composer",
-                    Genre = "First Genre",
-                    UniversalId = Guid.NewGuid()
-                };
-                _gameContext.Songs.Add(firstSong);
-            }
-
-            var firstGameTrack = _gameContext.GameTracks.FirstOrDefault(gt => gt.Id == 1);
-            if (firstGameTrack == null)
-            {
-                firstGameTrack = new Ez2OnGameTrack(
-                    firstSong,
-                    firstGame,
-                    new Ez2OnDifficultyMode {Category = DifficultyCategory.SuperHard, Level = 20});
-
-                _gameContext.GameTracks.Add(firstGameTrack);
-            }
 
             _gameContext.SaveChanges();
             _logger.LogInformation("Seed Successful");
