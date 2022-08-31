@@ -1,4 +1,4 @@
-﻿using Gaming.Domain.Aggregates.MusicAggregate;
+﻿using Gaming.Domain.AggregateModels.SongChartAggregate;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace MusicCatalog.EFCore.Persistence.EntityConfiguration;

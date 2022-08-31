@@ -1,12 +1,11 @@
-﻿using Gaming.Domain.Aggregates.GameAggregate;
-using Gaming.Domain.Aggregates.GameTrackAggregate.Ez2on;
+﻿using Gaming.Domain.AggregateModels.SongChartAggregate.Ez2on;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace MusicCatalog.EFCore.Persistence.EntityConfiguration;
 
-public sealed class GameTrackConfiguration : SeedWorkTptConfiguration<Ez2OnGameTrack>
+public sealed class GameTrackConfiguration : SeedWorkTptConfiguration<Ez2OnSongChart>
 {
-    public override void Configure(EntityTypeBuilder<Ez2OnGameTrack> builder)
+    public override void Configure(EntityTypeBuilder<Ez2OnSongChart> builder)
     {
         builder
             .HasOne(track => track.Game)
