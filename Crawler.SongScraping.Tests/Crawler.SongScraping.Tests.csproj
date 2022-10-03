@@ -35,7 +35,7 @@
     <None Update="appsettings.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Ez2OnWikiWiki-GameTracks-Sample.html">
+    <None Update="Ez2OnWikiWiki-GameTracks-Sample.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Remove="Ez2OnWikiWikiSample_files\zrt_lookup.html" />
