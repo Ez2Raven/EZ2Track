@@ -11,7 +11,7 @@ public interface ISong
     string Bpm { get; set; }
 }
 
-public class Song : Entity, ISong
+public class Song : ISong
 {
     public Song()
     {

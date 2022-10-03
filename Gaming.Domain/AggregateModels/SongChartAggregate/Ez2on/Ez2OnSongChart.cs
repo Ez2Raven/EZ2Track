@@ -2,7 +2,7 @@
 
 namespace Gaming.Domain.AggregateModels.SongChartAggregate.Ez2on;
 
-public class Ez2OnSongChart : Entity, IAggregateRoot, ISongChart
+public class Ez2OnSongChart : IAggregateRoot, ISongChart
 {
     public Ez2OnSongChart(ISong song, ReleaseTitle game, IDifficultyMode difficultyMode)
     {
@@ -12,9 +12,6 @@ public class Ez2OnSongChart : Entity, IAggregateRoot, ISongChart
         ThumbnailUrl = string.Empty;
         VisualizedBy = string.Empty;
     }
-
-    public int GameId { get; set; }
-    public int SongId { get; set; }
 
     public ReleaseTitle Game { get; set; }
     public ISong Song { get; set; }
