@@ -22,7 +22,11 @@ public abstract class Scraper<T> : IScraper<T>
 ///         A LinkedScraper parses a specific url and returns aggregated domain objects from the results of other
 ///         scrapers.
 ///     </para>
-///     <para>Refer to Decorator Pattern</para>
+///     <para>
+///         You should not override the base implementation of <see cref="Scraper{T}.Run(string)" />.
+///         Instead add a new method to "decorate" the objects returned from <see cref="Scraper{T}.Run(string)" />.
+///         Refer to Decorator Pattern.
+///     </para>
 /// </summary>
 /// <typeparam name="T"></typeparam>
 public abstract class LinkedScraper<T> : Scraper<T>
