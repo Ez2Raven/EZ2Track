@@ -1,11 +1,11 @@
 ﻿using System.Collections.Generic;
-using Crawler.SongScraping.Parsers.Exceptions;
+using Crawler.SongScraping.Interpreters.Exceptions;
 using Gaming.Domain.AggregateModels.SongChartAggregate;
 using HtmlAgilityPack;
 
-namespace Crawler.SongScraping.Parsers.Ez2OnWiki.SongList;
+namespace Crawler.SongScraping.Aggregators.Ez2OnWiki.Parsers.SongList;
 
-public class SongListParser : IHtmlCollectionParser<ISong>
+public class SongListCollectionParser : IDomainParser<ISong>
 {
     public string XPathToSongTitleV2 { get; set; } = "td[1]";
     public string XPathToComposer { get; set; } = "td[2]";
@@ -23,7 +23,7 @@ public class SongListParser : IHtmlCollectionParser<ISong>
             var songNodes = albumNode.SelectNodes("following-sibling::div[1]/table/tbody/tr");
             if (songNodes == null)
             {
-                throw new ParserException("unable to recognise song nodes from song list page");
+                throw new InterpreterException("unable to recognise song nodes from song list page");
             }
 
             foreach (var songNode in songNodes)

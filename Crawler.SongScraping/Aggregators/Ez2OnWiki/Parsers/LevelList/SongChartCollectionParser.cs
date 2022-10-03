@@ -1,22 +1,26 @@
 ﻿using System.Collections.Generic;
+using Crawler.SongScraping.Interpreters;
 using Gaming.Domain.AggregateModels.SongChartAggregate;
 using Gaming.Domain.AggregateModels.SongChartAggregate.Ez2on;
 using HtmlAgilityPack;
 
-namespace Crawler.SongScraping.Parsers.Ez2OnWiki.LevelList;
+namespace Crawler.SongScraping.Aggregators.Ez2OnWiki.Parsers.LevelList;
 
-public class LevelListParser : IHtmlCollectionParser<ISongChart>
+public class SongChartCollectionParser : IDomainParser<ISongChart>
 {
-    private readonly IDifficultyModeParser _difficultyModeParser;
-    private readonly IGameParser _gameSubParser;
-    private readonly ISongParser _songSubParser;
+    private readonly IDomainInterpreter<int> _chartLevelInterpreter;
+    private readonly IDomainInterpreter<ReleaseTitle> _gameReleaseInterpreter;
+    private readonly IDomainInterpreter<string> _songAlbumInterpreter;
+    private readonly IDomainInterpreter<string> _songTitleInterpreter;
 
-    public LevelListParser(ISongParser songSubParser, IGameParser gameSubParser,
-        IDifficultyModeParser difficultyModeParser)
+    public SongChartCollectionParser(IDomainInterpreter<string> songTitleInterpreter,
+        IDomainInterpreter<string> songAlbumInterpreter, IDomainInterpreter<ReleaseTitle> gameReleaseInterpreter,
+        IDomainInterpreter<int> chartLevelInterpreter)
     {
-        _songSubParser = songSubParser;
-        _gameSubParser = gameSubParser;
-        _difficultyModeParser = difficultyModeParser;
+        _songTitleInterpreter = songTitleInterpreter;
+        _songAlbumInterpreter = songAlbumInterpreter;
+        _gameReleaseInterpreter = gameReleaseInterpreter;
+        _chartLevelInterpreter = chartLevelInterpreter;
     }
 
     private string XPathToAlbum { get; } = "td[1]";
@@ -43,16 +47,16 @@ public class LevelListParser : IHtmlCollectionParser<ISongChart>
         var gameTracks = new List<ISongChart>();
         foreach (var songNode in nodes)
         {
-            var game = _gameSubParser.ParseReleaseTitle(songNode, XPathToAlbum);
-            var songTitle = _songSubParser.ParseTitle(songNode, XPathToSongTitle);
-            var songAlbum = _songSubParser.ParseAlbum(songNode, XPathToAlbum);
+            var game = _gameReleaseInterpreter.Interpret(songNode, XPathToAlbum);
+            var songTitle = _songTitleInterpreter.Interpret(songNode, XPathToSongTitle);
+            var songAlbum = _songAlbumInterpreter.Interpret(songNode, XPathToAlbum);
             var song = new Song {Album = songAlbum, Title = songTitle};
 
             var ez4KeysDifficultyMode = new Ez2OnDifficultyMode
             {
                 Category = DifficultyCategory.Easy,
                 KeyMode = Ez2OnKeyModes.FourKeys,
-                Level = _difficultyModeParser.ParseLevel(songNode, XPathTo4KeysEasyLevel)
+                Level = _chartLevelInterpreter.Interpret(songNode, XPathTo4KeysEasyLevel)
             };
 
             gameTracks.Add(new Ez2OnSongChart(song, game, ez4KeysDifficultyMode));
@@ -61,7 +65,7 @@ public class LevelListParser : IHtmlCollectionParser<ISongChart>
             {
                 Category = DifficultyCategory.Normal,
                 KeyMode = Ez2OnKeyModes.FourKeys,
-                Level = _difficultyModeParser.ParseLevel(songNode, XPathTo4KeysNormalLevel)
+                Level = _chartLevelInterpreter.Interpret(songNode, XPathTo4KeysNormalLevel)
             };
 
             gameTracks.Add(new Ez2OnSongChart(song, game, nm4KeysDifficultyMode));
@@ -70,7 +74,7 @@ public class LevelListParser : IHtmlCollectionParser<ISongChart>
             {
                 Category = DifficultyCategory.Hard,
                 KeyMode = Ez2OnKeyModes.FourKeys,
-                Level = _difficultyModeParser.ParseLevel(songNode, XPathTo4KeysHardLevel)
+                Level = _chartLevelInterpreter.Interpret(songNode, XPathTo4KeysHardLevel)
             };
 
             gameTracks.Add(new Ez2OnSongChart(song, game, hd4KeysDifficultyMode));
@@ -79,7 +83,7 @@ public class LevelListParser : IHtmlCollectionParser<ISongChart>
             {
                 Category = DifficultyCategory.SuperHard,
                 KeyMode = Ez2OnKeyModes.FourKeys,
-                Level = _difficultyModeParser.ParseLevel(songNode, XPathTo4KeysShdLevel)
+                Level = _chartLevelInterpreter.Interpret(songNode, XPathTo4KeysShdLevel)
             };
 
             gameTracks.Add(new Ez2OnSongChart(song, game, shd4KeysDifficultyMode));
@@ -88,7 +92,7 @@ public class LevelListParser : IHtmlCollectionParser<ISongChart>
             {
                 Category = DifficultyCategory.Easy,
                 KeyMode = Ez2OnKeyModes.FiveKeys,
-                Level = _difficultyModeParser.ParseLevel(songNode, XPathTo5KeysEasyLevel)
+                Level = _chartLevelInterpreter.Interpret(songNode, XPathTo5KeysEasyLevel)
             };
 
             gameTracks.Add(new Ez2OnSongChart(song, game, ez5KeysDifficultyMode));
@@ -97,7 +101,7 @@ public class LevelListParser : IHtmlCollectionParser<ISongChart>
             {
                 Category = DifficultyCategory.Normal,
                 KeyMode = Ez2OnKeyModes.FiveKeys,
-                Level = _difficultyModeParser.ParseLevel(songNode, XPathTo5KeysNormalLevel)
+                Level = _chartLevelInterpreter.Interpret(songNode, XPathTo5KeysNormalLevel)
             };
 
             gameTracks.Add(new Ez2OnSongChart(song, game, nm5KeysDifficultyMode));
@@ -106,7 +110,7 @@ public class LevelListParser : IHtmlCollectionParser<ISongChart>
             {
                 Category = DifficultyCategory.Hard,
                 KeyMode = Ez2OnKeyModes.FiveKeys,
-                Level = _difficultyModeParser.ParseLevel(songNode, XPathTo5KeysHardLevel)
+                Level = _chartLevelInterpreter.Interpret(songNode, XPathTo5KeysHardLevel)
             };
 
             gameTracks.Add(new Ez2OnSongChart(song, game, hd5KeysDifficultyMode));
@@ -115,7 +119,7 @@ public class LevelListParser : IHtmlCollectionParser<ISongChart>
             {
                 Category = DifficultyCategory.SuperHard,
                 KeyMode = Ez2OnKeyModes.FiveKeys,
-                Level = _difficultyModeParser.ParseLevel(songNode, XPathTo5KeysShdLevel)
+                Level = _chartLevelInterpreter.Interpret(songNode, XPathTo5KeysShdLevel)
             };
 
             gameTracks.Add(new Ez2OnSongChart(song, game, shd5KeysDifficultyMode));
@@ -124,7 +128,7 @@ public class LevelListParser : IHtmlCollectionParser<ISongChart>
             {
                 Category = DifficultyCategory.Easy,
                 KeyMode = Ez2OnKeyModes.SixKeys,
-                Level = _difficultyModeParser.ParseLevel(songNode, XPathTo6KeysEasyLevel)
+                Level = _chartLevelInterpreter.Interpret(songNode, XPathTo6KeysEasyLevel)
             };
 
             gameTracks.Add(new Ez2OnSongChart(song, game, ez6KeysDifficultyMode));
@@ -133,7 +137,7 @@ public class LevelListParser : IHtmlCollectionParser<ISongChart>
             {
                 Category = DifficultyCategory.Normal,
                 KeyMode = Ez2OnKeyModes.SixKeys,
-                Level = _difficultyModeParser.ParseLevel(songNode, XPathTo6KeysNormalLevel)
+                Level = _chartLevelInterpreter.Interpret(songNode, XPathTo6KeysNormalLevel)
             };
 
             gameTracks.Add(new Ez2OnSongChart(song, game, nm6KeysDifficultyMode));
@@ -142,7 +146,7 @@ public class LevelListParser : IHtmlCollectionParser<ISongChart>
             {
                 Category = DifficultyCategory.Hard,
                 KeyMode = Ez2OnKeyModes.SixKeys,
-                Level = _difficultyModeParser.ParseLevel(songNode, XPathTo6KeysHardLevel)
+                Level = _chartLevelInterpreter.Interpret(songNode, XPathTo6KeysHardLevel)
             };
 
             gameTracks.Add(new Ez2OnSongChart(song, game, hd6KeysDifficultyMode));
@@ -151,7 +155,7 @@ public class LevelListParser : IHtmlCollectionParser<ISongChart>
             {
                 Category = DifficultyCategory.SuperHard,
                 KeyMode = Ez2OnKeyModes.SixKeys,
-                Level = _difficultyModeParser.ParseLevel(songNode, XPathTo6KeysShdLevel)
+                Level = _chartLevelInterpreter.Interpret(songNode, XPathTo6KeysShdLevel)
             };
 
             gameTracks.Add(new Ez2OnSongChart(song, game, shd6KeysDifficultyMode));
@@ -160,7 +164,7 @@ public class LevelListParser : IHtmlCollectionParser<ISongChart>
             {
                 Category = DifficultyCategory.Easy,
                 KeyMode = Ez2OnKeyModes.EightKeys,
-                Level = _difficultyModeParser.ParseLevel(songNode, XPathTo8KeysEasyLevel)
+                Level = _chartLevelInterpreter.Interpret(songNode, XPathTo8KeysEasyLevel)
             };
 
             gameTracks.Add(new Ez2OnSongChart(song, game, ez8KeysDifficultyMode));
@@ -169,7 +173,7 @@ public class LevelListParser : IHtmlCollectionParser<ISongChart>
             {
                 Category = DifficultyCategory.Normal,
                 KeyMode = Ez2OnKeyModes.EightKeys,
-                Level = _difficultyModeParser.ParseLevel(songNode, XPathTo8KeysNormalLevel)
+                Level = _chartLevelInterpreter.Interpret(songNode, XPathTo8KeysNormalLevel)
             };
 
             gameTracks.Add(new Ez2OnSongChart(song, game, nm8KeysDifficultyMode));
@@ -178,7 +182,7 @@ public class LevelListParser : IHtmlCollectionParser<ISongChart>
             {
                 Category = DifficultyCategory.Hard,
                 KeyMode = Ez2OnKeyModes.EightKeys,
-                Level = _difficultyModeParser.ParseLevel(songNode, XPathTo8KeysHardLevel)
+                Level = _chartLevelInterpreter.Interpret(songNode, XPathTo8KeysHardLevel)
             };
 
             gameTracks.Add(new Ez2OnSongChart(song, game, hd8KeysDifficultyMode));
@@ -187,7 +191,7 @@ public class LevelListParser : IHtmlCollectionParser<ISongChart>
             {
                 Category = DifficultyCategory.SuperHard,
                 KeyMode = Ez2OnKeyModes.EightKeys,
-                Level = _difficultyModeParser.ParseLevel(songNode, XPathTo8KeysShdLevel)
+                Level = _chartLevelInterpreter.Interpret(songNode, XPathTo8KeysShdLevel)
             };
 
             gameTracks.Add(new Ez2OnSongChart(song, game, shd8KeysDifficultyMode));

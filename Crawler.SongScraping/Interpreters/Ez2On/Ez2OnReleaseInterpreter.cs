@@ -1,13 +1,13 @@
-﻿using Crawler.SongScraping.Parsers.Exceptions;
+﻿using Crawler.SongScraping.Interpreters.Exceptions;
 using Gaming.Domain.AggregateModels.SongChartAggregate;
 using Gaming.Domain.AggregateModels.SongChartAggregate.Ez2on;
 using HtmlAgilityPack;
 
-namespace Crawler.SongScraping.Parsers.Ez2OnWiki.LevelList;
+namespace Crawler.SongScraping.Interpreters.Ez2On;
 
-public class Ez2OnGameParser : IGameParser
+public class Ez2OnReleaseInterpreter : IDomainInterpreter<ReleaseTitle>
 {
-    public ReleaseTitle ParseReleaseTitle(HtmlNode node, string xPath)
+    public ReleaseTitle Interpret(HtmlNode node, string xPath)
     {
         var album = node.SelectSingleNode(xPath)?.InnerText.Trim();
 
@@ -28,7 +28,7 @@ public class Ez2OnGameParser : IGameParser
             "CV" => Ez2OnReleaseTitle.CodeNameViolet,
             "PP" => Ez2OnReleaseTitle.PrestigePass,
             "O2" => Ez2OnReleaseTitle.O2Jam,
-            _ => throw new ParserException("Unrecognized EZ2ON Reboot: R release title.")
+            _ => throw new InterpreterException("Unrecognized EZ2ON Reboot: R release title.")
         };
     }
 }

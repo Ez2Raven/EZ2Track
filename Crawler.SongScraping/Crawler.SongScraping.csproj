@@ -7,12 +7,20 @@
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
 
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <DocumentationFile></DocumentationFile>
+  </PropertyGroup>
+
   <ItemGroup>
     <PackageReference Include="HtmlAgilityPack" Version="1.11.43" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Gaming.Domain\Gaming.Domain.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Aggregator\Ez2OnWiki" />
   </ItemGroup>
 
 </Project>
